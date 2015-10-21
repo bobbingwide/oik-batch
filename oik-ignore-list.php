@@ -21,11 +21,15 @@ function _ca_not_wordpress_ignore_list() {
 /**
  * createapi ignore list - copy of listapis ignore list 
  *
+ * Includes wp-config.php since otherwise this can reveal DB connection information
+ * It's a bit silly to have this information as a constant! 
+ * 
  * @TODO Change so that po, mo and other files are NOT ignored for the "wordpress" plugin
  * 
  *
  */
 function _ca_checkignorelist( $file ) {
+  gobang();
   $dir = pathinfo( $file, PATHINFO_DIRNAME );
   $ignore_dirs = bw_assoc( bw_as_array( "oik-tunes/getid3," ) );
   $ignore = bw_array_get( $ignore_dirs, $dir, false );
@@ -34,16 +38,16 @@ function _ca_checkignorelist( $file ) {
   } else {  
     $filename = pathinfo( $file, PATHINFO_FILENAME );
     // $ignores = bw_assoc( bw_as_array( "oik-activation,oik-docblock,bobbnotwp" ) );
-    $ignore_files = "oik-activation,oik-docblock,bobbnotwp";
+    $ignore_files = "wp-config,oik-activation,oik-docblock,bobbnotwp";
     //if ( $plugin !== "wordpress" ) {
       $ignore_files .= _ca_not_wordpress_ignore_list(); 
     //}
     $ignores = bw_assoc( bw_as_array( $ignore_files ) );
     $ignore = bw_array_get( $ignores, $filename, false );
     if ( $ignore ) {
-      // echo "Ignoring file: $filename " . PHP_EOL;
+      echo "Ignoring file: $filename " . PHP_EOL;
     } else { 
-      //echo "Processing file: $filename " . PHP_EOL ;
+      echo "Passing file: $filename " . PHP_EOL ;
       //goban();
     }
   }
@@ -69,7 +73,7 @@ function _la_checkignorelist( $file ) {
   } else {  
     $filename = pathinfo( $file, PATHINFO_FILENAME );
     // $ignores = bw_assoc( bw_as_array( "oik-activation,oik-docblock,bobbnotwp" ) );
-    $ignore_files = "oik-activation,oik-docblock,bobbnotwp,geshi,cron-svn-pots,extract,ExtractTest,l10n,makepot,mo,po,streams,pot-ext-meta,";
+    $ignore_files = "wp-config,oik-activation,oik-docblock,bobbnotwp,geshi,cron-svn-pots,extract,ExtractTest,l10n,makepot,mo,po,streams,pot-ext-meta,";
     $ignore_files .= ",extension.cache.dbm,extension.cache.mysql,getid3.lib,module.archive.gzip,module.archive.rar";
     $ignores = bw_assoc( bw_as_array( $ignore_files ) );
     $ignore = bw_array_get( $ignores, $filename, false );
@@ -77,7 +81,7 @@ function _la_checkignorelist( $file ) {
       $ignored++;
       echo "Ignoring $ignored file: $filename " . PHP_EOL;
     } else { 
-      //echo "Processing file: $filename " . PHP_EOL ;
+      echo "Passing file: $filename " . PHP_EOL ;
       //goban();
     }
   }

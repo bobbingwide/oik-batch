@@ -55,7 +55,7 @@ function oikb_getopt( $opt=null ) {
   if ( $opt ) { 
     $options = getopt( substr( $opt, 1 ).":", array( $opt .":" ) );
   } else { 
-    $options = getopt( "s:u:p:", array( "site:", "user:", "pass:", "plugin:", "apikey:", "name:" ) );
+    $options = getopt( "s:u:p:", array( "site:", "user:", "pass:", "plugin:", "apikey:", "name:", "previous:" ) );
   }  
   //echo PHP_EOL;
   //print_r( $options );

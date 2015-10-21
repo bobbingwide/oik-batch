@@ -57,7 +57,7 @@ function pf( $text ) {
 }
 
 /** 
- * Load WordPress pre-requsite files in order to load a plugin
+ * Load WordPress pre-requisite files in order to load a plugin
  *
  * This function was created by trial and error while attempting to load "easy-digital-downloads"
  * WooCommerce was an easier plugin to load.

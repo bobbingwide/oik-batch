@@ -3,7 +3,7 @@
 /** 
  * Function to invoke when createapi2.php is loaded
  * 
- * Syntax: $argv[0] --plugin= [--site= --user= --pass= --apikey=] --name=api
+ * Syntax: $argv[0] --plugin= [--site= --user= --pass= --apikey=] --name=api --previous=previous
  *
  * Note: createapi2.php is not designed to be called by oik-batch.php
  * as it needs to obtain parameters using oikb_getopt()
@@ -45,6 +45,13 @@ function createapis_loaded( $argc, $argv ) {
     $selected_api = bw_array_get( oikb_getopt(), "name", null );
     echo "api: $selected_api!" . PHP_EOL;
     
+    /**
+     * We can only use previous= when we've chosen a specific plugin
+     */
+    $previous = bw_array_get( oikb_getopt(), "previous", null );
+    echo "Previous: $previous" . PHP_EOL;
+    
+    
     if ( $plugin ) {
       $component = $plugin; // $argv[1];
     } else {
@@ -55,7 +62,7 @@ function createapis_loaded( $argc, $argv ) {
     
     $components = bw_as_array( $component );
     foreach ( $components as $component ) {
-      _ca_doaplugin( $component );
+      _ca_doaplugin( $component, $previous );
     }  
     //echo "done" .  PHP_EOL;
   }
@@ -73,14 +80,14 @@ function _ca_checkignorelist( $file ) {
   } else {  
     $filename = pathinfo( $file, PATHINFO_FILENAME );
     // $ignores = bw_assoc( bw_as_array( "oik-activation,oik-docblock,bobbnotwp" ) );
-    $ignore_files = "oik-activation,oik-docblock,bobbnotwp,geshi,cron-svn-pots,extract,ExtractTest,l10n,makepot,mo,po,streams,pot-ext-meta,";
+    $ignore_files = "wp-config,oik-activation,oik-docblock,bobbnotwp,geshi,cron-svn-pots,extract,ExtractTest,l10n,makepot,mo,po,streams,pot-ext-meta,";
     $ignore_files .= ",extension.cache.dbm,extension.cache.mysql,getid3.lib,module.archive.gzip,module.archive.rar";
     $ignores = bw_assoc( bw_as_array( $ignore_files ) );
     $ignore = bw_array_get( $ignores, $filename, false );
     if ( $ignore ) {
-      // echo "Ignoring file: $filename " . PHP_EOL;
+      echo "Ignoring file: $filename " . PHP_EOL;
     } else { 
-      //echo "Processing file: $filename " . PHP_EOL ;
+      echo "Passing file: $filename " . PHP_EOL ;
       //goban();
     }
   }
@@ -105,8 +112,11 @@ function _ca_checkignorelist( $file ) {
 function _lf_dofile_ajax( $file ) {
   global $plugin;
   if ( oikb_get_site() ) {
-    if ( !$plugin ) {
+    if ( $plugin == "wordpress" ) {
       $file = strip_directory_path( ABSPATH, $file );
+    } else {
+      echo $file . PHP_EOL;
+        
     }
     echo "Processing file: $plugin,$file" . PHP_EOL;
     $response = oikb_get_response( "Continue to process file?" );
@@ -178,7 +188,7 @@ function _ca_doapis( $file, $plugin_p, $component_type ) {
   global $plugin;
   $plugin = $plugin_p;
   static $count = 0;
-  echo "Processing valid : $plugin $file $component_type" . PHP_EOL;
+  echo "Processing valid: $plugin $file $component_type" . PHP_EOL;
   $apis = _oiksc_get_apis2( $file, true, $component_type );
   foreach ( $apis as $api ) {
     $count++;
@@ -197,7 +207,9 @@ function _ca_doapis( $file, $plugin_p, $component_type ) {
     echo "$count,$csv,$apitype,$desc";
     oik_require( "oik-admin-ajax.inc", "oik-batch" );
     if ( oikb_get_site() ) {
-      if ( !$plugin ) {
+      //if ( !$plugin ) {
+      
+      if ( $plugin == "wordpress" ) {
         $file = strip_directory_path( ABSPATH, $file );
       }
       echo "Processing api: $plugin,$file,$apiname" . PHP_EOL;
@@ -220,11 +232,14 @@ function _ca_doapis( $file, $plugin_p, $component_type ) {
  * Components supported:
  * "wordpress" - all files in the WordPress installation excluding wp-content
  * <i>plugin</i> - all the files in the named plugin 
- * <i>theme</i> - @TODO 
+ * <i>theme</i> - all the files in the named theme
  *
  * Process each file in the component, defining the file, classes, methods and APIs
+ * 
+ * @param string $component - the name of the plugin or theme, or "wordpress"
+ * @param string $previous - the previous version to compare against - for performance
  */
-function _ca_doaplugin( $component ) {
+function _ca_doaplugin( $component, $previous=null ) {
   global $plugin, $apikey;
   $plugin = $component;
   if ( $plugin ) {
@@ -243,7 +258,9 @@ function _ca_doaplugin( $component ) {
       if ( $response ) {
         oik_require( "admin/oik-apis.php", "oik-shortcodes" );
         //wp_register_plugin_realpath( WP_PLUGIN_DIR . "/$plugin/." );
+        oik_require( "oik-list-previous-files.php", "oik-batch" );
         $files = oiksc_load_files( $plugin, $component_type );
+        $files = oikb_maybe_do_files( $files, $previous, $component, $component_type );
         oiksc_do_files( $files, $plugin, $component_type, "_ca_dofile" );
       }
     } else {

@@ -1,5 +1,4 @@
 <?php // (C) Copyright Bobbing Wide 2013, 2014
-
 /** 
  * Function to invoke when listapis2.php is loaded
  * @param int $argc - count of parameters
@@ -13,6 +12,11 @@ function listapis_loaded( $argc, $argv ) {
   oik_require( "bobbfunc.inc" );
   if ( $argc > 1 ) {
     $component = $argv[1];
+    if ( $argc > 2 ) {
+      $previous = $argv[2];
+    } else {
+      $previous = null;
+    }
   } else {
     oik_require( "list_oik_plugins.php", "oik-batch" );
     $component = list_oik_plugins();
@@ -20,12 +24,11 @@ function listapis_loaded( $argc, $argv ) {
   $components = bw_as_array( $component );
   oik_require( "oik-ignore-list.php", "oik-batch" );
   foreach ( $components as $component ) {
-    _la_doit( $component );
+    //$previous = oikb_list_previous_files( $component, $previous );
+    _la_doit( $component, $previous );
   }  
   //echo "done" .  PHP_EOL;
 }
-
-
 
 /**
  * List the APIs for a specific file
@@ -103,17 +106,20 @@ function _la_setMaxSize( $size ) {
  * except that it's designed primarily for WordPress plugins.
  * 
  * @param string $component - expected to be a locally installed plugin
+ * @param string $previous - the previous version to compare against
  *
  */
-function _la_doit( $component ) {
+function _la_doit( $component, $previous=null ) {
   //echo __FUNCTION__ . PHP_EOL;
   global $plugin;
   $plugin = $component;
   oik_require( "admin/oik-apis.php", "oik-shortcodes" );
   oik_require( "oik-list-wordpress-files.php", "oik-batch" );
-  echo $plugin . PHP_EOL;
+  oik_require( "oik-list-previous-files.php", "oik-batch" );
+  echo "Plugin: $plugin" . PHP_EOL;
   $component_type = oiksc_query_component_type( $plugin ); 
   $files = oiksc_load_files( $plugin, $component_type );
+  $files = oikb_maybe_do_files( $files, $previous, $plugin, $component_type );
   oiksc_do_files( $files, $plugin, $component_type, "_la_dofile" );
   global $max_size;
   echo "Max size: $max_size" . PHP_EOL;

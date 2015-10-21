@@ -1,14 +1,14 @@
-<?php // (C) Copyright Bobbing Wide 2013, 2014
+<?php // (C) Copyright Bobbing Wide 2013-2015
 /*
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.7
+Version: 0.8
 Author: bobbingwide
-Author URI: http://www.bobbingwide.com
+Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2
 
-    Copyright 2013 - 2014 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2013 - 2015 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -124,7 +124,7 @@ function oik_batch_define_constants() {
     /** Set up WordPress environment */
     global $wp_did_header;
     $abspath = __FILE__;
-    //echo "Setting ABSPATH: $abspath" . PHP_EOL;
+    echo "Setting ABSPATH: $abspath" . PHP_EOL;
     $abspath = dirname( dirname( dirname( dirname( $abspath ) ) ) );
     $abspath .= "/";
     echo "Setting ABSPATH: $abspath" . PHP_EOL;
@@ -255,19 +255,23 @@ function oik_batch_activation() {
  */
 function oik_batch_loaded() {
   if ( PHP_SAPI == "cli" ) {
-    oik_batch_debug();
-    oik_batch_trace( true );
-    oik_batch_define_constants();
-    oik_batch_load_oik_boot();
-    oik_batch_simulate_wp_settings();
-    oik_batch_load_wordpress_files(); 
-    echo PHP_SAPI;
-    echo PHP_EOL;
+    if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
+      // This is WP-CLI
+    } else {
+      oik_batch_debug();
+      oik_batch_trace( true );
+      oik_batch_define_constants();
+      oik_batch_load_oik_boot();
+      oik_batch_simulate_wp_settings();
+      oik_batch_load_wordpress_files(); 
+      echo PHP_SAPI;
+      echo PHP_EOL;
     $included_files = get_included_files();
     if ( $included_files[0] == __FILE__) {
-      oik_batch_run();
-    } else {
-     // wp-batch has been loaded by another PHP routine so that routine is in charge
+        oik_batch_run();
+    }// else {
+     // wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
+     
     }
   } else {
     //echo PHP_SAPI;
@@ -343,6 +347,8 @@ function oik_batch_run() {
     oik_batch_run_script( $script );
   }   
 }
+
+
 
 oik_batch_loaded();
 

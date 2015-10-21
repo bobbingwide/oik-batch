@@ -2,9 +2,9 @@
 Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, subset
-Requires at least: 3.8
-Tested up to: 3.9.1
-Stable tag: 0.7
+Requires at least: 3.9
+Tested up to: 4.1
+Stable tag: 0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -80,8 +80,11 @@ php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plu
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8 = 
+Supports previous: parameter
+
 = 0.7 = 
-Now supports parsing of themes. Using oik-theme on the server.
+Now supports parsing of themes. Using the oik-themes plugin on the server.
 
 = 0.6 = 
 Added oik-load.php to find out the changes when plugins are loaded
@@ -102,6 +105,17 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8 = 
+* Added: createapi2 now uses the previous= parameter instead of the name= parameter when applying upgrades from a previous version
+* Changed: uses _la_checkignorelist() to determine which files to ignore
+* Changed: ignores wp-config.php - security implications
+* Not fixed: Does not yet support running oik-batch from a symbolicly linked folder
+* Changed: Supports invocation from WP-CLI ( boot-fs.php )
+* Changed: timeout on createapi2 increased to 30 seconds
+* Changed: listapis2 supports comparing with a previous version of the plugin/theme
+* Added: oik-list-previous-files.php 
+* Added: oik-wp-api.php and oik-wp-api-tests.php - prototype files working with the WordPress REST API 
+
 = 0.7 = 
 * Added: Support for parsing theme files
 * Changed: Created common functions for listapis2.php and creatapi2.php

@@ -3,7 +3,7 @@
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.8
+Version: 0.8.1
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2
@@ -77,6 +77,9 @@ if ( !function_exists( 'bw_array_get' ) ) {
  
 /**
  * Turn on debugging for oik-batch
+ * 
+ * We're running in batch mode so we want to see all errors
+ *
  */ 
 function oik_batch_debug() {
   define( 'WP_DEBUG', true );
@@ -93,9 +96,9 @@ function oik_batch_trace( $trace_on=false ) {
   if ( $trace_on ) {
     define( 'BW_TRACE_CONFIG_STARTUP', true );
     define( 'BW_TRACE_ON', true);
-    define( 'BW_ACTIONS_ON', true );
+    //define( 'BW_ACTIONS_ON', true );
     define( 'BW_TRACE_RESET', false );
-    define( 'BW_ACTIONS_RESET', false );
+    //define( 'BW_ACTIONS_RESET', false );
   } else {
     // We don't do the defines so it can be done later.
   } 
@@ -212,7 +215,7 @@ function oik_batch_load_oik_boot() {
     $dir = dirname( __FILE__ );
     $parent_dir = dirname( $dir );
     echo $parent_dir . PHP_EOL;
-    $oik_boot = "$parent_dir/oik/oik_boot.inc";
+    $oik_boot = "$parent_dir/oik/libs/oik_boot.php";
     echo $oik_boot . PHP_EOL;
     if ( file_exists( $oik_boot ) ) {
       require_once( $oik_boot );
@@ -254,37 +257,37 @@ function oik_batch_activation() {
  * 
  */
 function oik_batch_loaded() {
-  if ( PHP_SAPI == "cli" ) {
-    if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
-      // This is WP-CLI
-    } else {
-      oik_batch_debug();
-      oik_batch_trace( true );
-      oik_batch_define_constants();
-      oik_batch_load_oik_boot();
-      oik_batch_simulate_wp_settings();
-      oik_batch_load_wordpress_files(); 
-      echo PHP_SAPI;
-      echo PHP_EOL;
-    $included_files = get_included_files();
-    if ( $included_files[0] == __FILE__) {
-        oik_batch_run();
-    }// else {
-     // wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
-     
-    }
-  } else {
-    //echo PHP_SAPI;
-    //echo PHP_EOL;
-    if ( function_exists( "bw_trace2" ) ) {
-      bw_trace2( PHP_SAPI, "oik-batch loaded in WordPress environment?" );
-    }
-    if ( function_exists( "add_action" ) ) {
-      // if ( bw_is_wordpress() ) {
-      add_action( "admin_notices", "oik_batch_activation" );
-      add_action( "oik_admin_menu", "oik_batch_admin_menu" );
-    } 
-  }
+	if ( PHP_SAPI == "cli" ) {
+		if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
+			// This is WP-CLI
+		} else {
+			oik_batch_debug();
+			oik_batch_trace( true );
+			oik_batch_define_constants();
+			oik_batch_load_oik_boot();
+			oik_batch_simulate_wp_settings();
+			oik_batch_load_wordpress_files(); 
+			echo PHP_SAPI;
+			echo PHP_EOL;
+			$included_files = get_included_files();
+			if ( $included_files[0] == __FILE__) {
+				oik_batch_run();
+			}// else {
+				// wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
+			echo "End cli:" . __FUNCTION__ . PHP_EOL; 
+		}
+	} else {
+		//echo PHP_SAPI;
+		//echo PHP_EOL;
+		if ( function_exists( "bw_trace2" ) ) {
+			bw_trace2( PHP_SAPI, "oik-batch loaded in WordPress environment?" );
+		}
+		if ( function_exists( "add_action" ) ) {
+			// if ( bw_is_wordpress() ) {
+			add_action( "admin_notices", "oik_batch_activation" );
+			add_action( "oik_admin_menu", "oik_batch_admin_menu" );
+		}
+	}
 }
 
 /**

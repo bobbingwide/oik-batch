@@ -1,10 +1,10 @@
 === oik-batch ===
 Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
-Tags: batch, WordPress, subset
-Requires at least: 3.9
-Tested up to: 4.1
-Stable tag: 0.8
+Tags: batch, WordPress, CLI
+Requires at least: 4.2
+Tested up to: 4.3.1
+Stable tag: 0.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -25,28 +25,30 @@ Batch interface to remote WordPress servers
 
 == Frequently Asked Questions ==
 = What are the components? =
-Currently:
 
+Currently:
 
 * createapi2.php - used to document oik APIs
 * list_oik_plugins.php - returns a list of known oik-plugins to be processed
 * listapis2.php - test routine to list all the APIs in a plugin
 * oik-admin-ajax.inc - batch interface to oiksc create API
+* oik-batch.php - Batch processing main routine
+* oik-ignore-list.php - Ignore dir and file logic
+* oik-list-previous-files.php - List previous versions files
+* oik-list-wordpress-files.php - List WordPress core files
 * oik-login.inc - common functions for command line
-* oik-batch.php - main routine
-* oik-site.php - UNDER ACTIVE DEVELOPMENT
-* oik-load.php - UNDER ACTIVE DEVELOPMENT
+* oik-wp.php - Standalone WordPress main routine
 
+Under development:
+
+* oik-load.php - Load a single plugin
+* oik-site.php - PROTOTYPE web site checker
 
 * readme.txt - this file ( also README.md ) 
 
- 
-Deprecated code:
-* wp-batch._php - deprecated code. use oik-batch.php
-* createapi._php - use createapi2.php
-* listapis._php - use listapis2.php
-
 = What are the dependencies? =
+
+oik-batch is still dependent upon the oik base plugin's files if oik, oik-lib nor oik-bwtrace is not loaded.
 
 For listing and defining the APIs implemented by a WordPress plugin, or WordPress itself you will need the following:
 
@@ -58,17 +60,32 @@ For listing and defining the APIs implemented by a WordPress plugin, or WordPres
 * a local WordPress installation
 
 
-= How do I invoke it? =
-Create a batch file such as batch.bat
+= How do I invoke the routines? =
+
+Create a batch file for each of the main routine
+
+batch.bat for invoking oik-batch.php
+
 ` 
 php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-batch.php %*
 `
 pass the name of the PHP file to invoke as the first parameter
 
-To invoke listapis2 use:
+e.g. To invoke listapis2 use:
 `
 batch listapis2 <i>plugin</i>  
 `
+
+oikwp.bat for invoking oik-wp.php
+
+`
+rem Run oik-wp in batch mode so that you can test some code outwith the browser
+php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-wp.php %*
+`
+
+Run the routine from the required installation's folder where the php file exists.
+This allows oik-wp to determine the correct wp-config file to use.
+
 
 
 Alternatively oik-batch.php can be included in the main routine. 
@@ -76,10 +93,23 @@ Alternatively oik-batch.php can be included in the main routine.
 php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plugin=%1 --site=http://oik-plugins.co.uk --apikey=apikey
 `
 
+= What files are deprecated? =
+
+The following files are deprecated and will no longer be released
+
+* wp-batch._php - deprecated code. use oik-batch.php
+* createapi._php - use createapi2.php
+* listapis._php - use listapis2.php
+
+
+
 == Screenshots ==
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.1 =
+Added oik-wp.php - Standalone WordPress main routine
+
 = 0.8 = 
 Supports previous: parameter
 
@@ -105,6 +135,19 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.1 =
+* Added: oik-wp.php - Standalone WordPress, not WP-cli
+* Added: libs/oik-cli.php - Library file for 'batch' APIs
+* Changed: Improve oikb_get_response() to return the complete response, if needed
+* Changed: Added start: parameter, primarily for createapi2 processing
+* Changed: Updated ignore file logic 
+* Changed: oik-batch doesn't set deprecated constants for oik-bwtrace
+* Changed: oik_batch_load_oik_boot() loads oik-boot from oik's libs folder
+* Changed: listapis2.php and createapi2.php now use shared library file: bobbfunc
+* Changed: createapi2.php supports start parameter
+* Changed: createapi2.php uses _la_checkignorelist()
+* Fixed: createapi2.php requires more include files
+
 = 0.8 = 
 * Added: createapi2 now uses the previous= parameter instead of the name= parameter when applying upgrades from a previous version
 * Changed: uses _la_checkignorelist() to determine which files to ignore

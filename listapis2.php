@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2013, 2014
+<?php // (C) Copyright Bobbing Wide 2013-2015
 /** 
  * Function to invoke when listapis2.php is loaded
  * @param int $argc - count of parameters
@@ -9,7 +9,9 @@ function listapis_loaded( $argc, $argv ) {
   require_once( ABSPATH . "wp-admin/includes/plugin.php" );
   require_once( ABSPATH . WPINC . "/shortcodes.php" );
   require_once( ABSPATH . WPINC . "/theme.php" );
-  oik_require( "bobbfunc.inc" );
+	//oik_require_lib( "bobbcomp" );
+	oik_require( "bobbcomp.inc" );
+  oik_require_lib( "bobbfunc" );
   if ( $argc > 1 ) {
     $component = $argv[1];
     if ( $argc > 2 ) {

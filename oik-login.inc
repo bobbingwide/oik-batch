@@ -15,15 +15,16 @@ function get_bloginfo( $arg) {
  * @return string the trimmed response
  */
 function oikb_get_response( $text="Continue?", $pause=false ) {
-  static $response = false; 
-  echo "$text ( y=yes/n=no/g=go/q=quit )";
-  if ( $pause || ( $response !== "g" ) && ( $response !== "s" ) ) {
+  static $resp = false; 
+	$response = $resp;
+  echo "$text ( y=yes/n=no/s=skip/g=go/q=quit )";
+  if ( $pause || ( $resp !== "g" ) && ( $resp !== "s" ) ) {
     $stdin = fopen( "php://stdin", "r" );
     $response = fgets( $stdin );
     fclose( $stdin );
   }  
-  $response = strtolower( substr( trim( $response ), 0, 1 ) );
-  switch ( $response ) {
+	$resp = strtolower( substr( trim( $response ), 0, 1 ) );
+  switch ( $resp ) {
     case "n":
     case "s":
       $response = false;
@@ -55,7 +56,7 @@ function oikb_getopt( $opt=null ) {
   if ( $opt ) { 
     $options = getopt( substr( $opt, 1 ).":", array( $opt .":" ) );
   } else { 
-    $options = getopt( "s:u:p:", array( "site:", "user:", "pass:", "plugin:", "apikey:", "name:", "previous:" ) );
+    $options = getopt( "s:u:p:", array( "site:", "user:", "pass:", "plugin:", "apikey:", "name:", "previous:", "start:" ) );
   }  
   //echo PHP_EOL;
   //print_r( $options );

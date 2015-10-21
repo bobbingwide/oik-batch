@@ -127,7 +127,7 @@ function oik_load_loaded( $argc, $argv ) {
   timer_start();
    
   oik_require( "bobbfunc.inc" ); 
-  oik_require( "shortcodes/oik-api-status.php", "oik-shortcodes" );
+  //oik_require( "shortcodes/oik-api-status.php", "oik-shortcodes" );
   oikai_api_status( false, "oik-batch" );
   bw_flush();
   

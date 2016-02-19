@@ -311,6 +311,9 @@ function oikb_maybe_do_files( $files, $prev_version, $plugin, $component_type ) 
  * oikb_get_git_source() should return the directory of the git repo
  *  
  * use this function in preference to oikb_maybe_do_files()
+ *
+ * Note: Having found the git directory we need to stay in this directory in order to parse all the files
+ * This also means that the server needs to have the git extract as well!  
  *  
  * 
  */
@@ -332,6 +335,7 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
 	if ( $git_dir ) {
 		$files = oikb_git_command( "changed", $prev_version );
 		$files = $git->result_as_array();
+		chdir( $git_dir );
 	} else {
 		$files = null;
 	}

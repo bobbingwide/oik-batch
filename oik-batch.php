@@ -84,7 +84,8 @@ if ( !function_exists( 'bw_array_get' ) ) {
 function oik_batch_debug() {
   define( 'WP_DEBUG', true );
   error_reporting(E_ALL);
-  @ini_set('display_errors',1);
+  ini_set('display_errors', 1);
+	ini_set( 'log_errors', 1 );
 }
 
 /**
@@ -123,31 +124,38 @@ function oik_batch_trace( $trace_on=false ) {
  * If not defined here then these constants will be defined in other source files such as default-constants.php 
  */
 function oik_batch_define_constants() {
-  if ( !defined('ABSPATH') ) {
-    /** Set up WordPress environment */
-    global $wp_did_header;
-    $abspath = __FILE__;
-    echo "Setting ABSPATH: $abspath" . PHP_EOL;
-    $abspath = dirname( dirname( dirname( dirname( $abspath ) ) ) );
-    $abspath .= "/";
-    echo "Setting ABSPATH: $abspath" . PHP_EOL;
-    define( "ABSPATH", $abspath );
-    define('WP_USE_THEMES', false);
-    $wp_did_header = true;
-    //require_once('../../..//wp-load.php');
-    
-    // We can't load bwtrace.inc until we know ABSPATH
-    //require_once( ABSPATH . 'wp-content/plugins/oik/bwtrace.inc' );
-    
-    define( 'WPINC', 'wp-includes' );
+	if ( !defined('ABSPATH') ) {
+		/** Set up WordPress environment */
+		global $wp_did_header;
+		echo "Setting ABSPATH:". PHP_EOL;
+		
+		$abspath = oik_batch_locate_wp_config();
+		
+		//$abspath = __FILE__;
+		//$abspath = dirname( dirname( dirname( dirname( $abspath ) ) ) );
+		//$abspath .= "/";
+    //$abspath = str_replace( "\\", "/", $abspath );
+		//if ( ':' === substr( $abspath, 1, 1 ) ) {
+		//	$abspath = ucfirst( $abspath );
+		//}
+		echo "Setting ABSPATH: $abspath" . PHP_EOL;
+		define( "ABSPATH", $abspath );
+		define('WP_USE_THEMES', false);
+		$wp_did_header = true;
+		//require_once('../../..//wp-load.php');
+		
+		// We can't load bwtrace.inc until we know ABSPATH
+		//require_once( ABSPATH . 'wp-content/plugins/oik/bwtrace.inc' );
+			
+		define( 'WPINC', 'wp-includes' );
     
   	if ( !defined('WP_CONTENT_DIR') )
   		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' ); // no trailing slash, full paths only - copied from default-constants.php
-
-    if ( !defined('WPMU_PLUGIN_DIR') ) {
-      define( 'WPMU_PLUGIN_DIR', WP_CONTENT_DIR . '/mu-plugins' ); // full path, no trailing slash
-    }
-  }
+	
+		if ( !defined('WPMU_PLUGIN_DIR') ) {
+			define( 'WPMU_PLUGIN_DIR', WP_CONTENT_DIR . '/mu-plugins' ); // full path, no trailing slash
+		}
+	}
 }
 
 /**
@@ -189,8 +197,8 @@ function oik_batch_simulate_wp_settings() {
 function oik_batch_load_wordpress_files() {
   // Load the L10n library.
   require_once( ABSPATH . WPINC . '/l10n.php' ); // for get_translations_for_domain()
-  require_once( ABSPATH . WPINC . "/formatting.php" );
   require_once( ABSPATH . WPINC . "/plugin.php" );
+  require_once( ABSPATH . WPINC . "/formatting.php" );
   //require_once( ABSPATH . WPINC . "/option.php" );
   require_once( ABSPATH . WPINC . "/functions.php" );
   require( ABSPATH . WPINC . '/class-wp-error.php' );
@@ -263,6 +271,7 @@ function oik_batch_loaded() {
 		} else {
 			oik_batch_debug();
 			oik_batch_trace( true );
+			oik_batch_locate_wp_config();
 			oik_batch_define_constants();
 			oik_batch_load_oik_boot();
 			oik_batch_simulate_wp_settings();
@@ -319,10 +328,10 @@ function oik_batch_run_script( $script ) {
       $dirname = "oik-batch"; // @TODO - make it choose the current directory
     } 
     $filename = bw_array_get( $script_parts, "filename", null );
-    $extension = bw_array_get( $script_parts, "extension", ".php" );
+    $extension = bw_array_get( $script_parts, "extension", "php" );
     
        
-    $required_file = WP_PLUGIN_DIR . "/$dirname/$filename$extension";
+    $required_file = WP_PLUGIN_DIR . "/$dirname/$filename.$extension";
     echo $required_file . PHP_EOL;
     if ( file_exists( $required_file ) ) {
       require_once( $required_file );
@@ -339,17 +348,98 @@ function oik_batch_run_script( $script ) {
  *
  * We will assume that a partial path to the routine to be run ($server) has been specified
  */
+if ( !function_exists( "oik_batch_run" ) ) { 
 function oik_batch_run() {
   if ( $_SERVER['argc'] >=2  ) {
     $script = $_SERVER['argv'][1]; 
     //print_r( $_SERVER['argv'] );
     array_shift( $_SERVER['argv'] );
+		echo "Shifting argv" . PHP_EOL;
     //print_r( $_SERVER['argv'] );
     $_SERVER['argc']--;
     //print_r( $_SERVER['argc'] );
     oik_batch_run_script( $script );
   }   
 }
+}
+
+/**
+ * Normalize a path to UNIX style
+ * 
+ * Similar to wp_normalize_path except this doesn't deal with double slashes...
+ * which might be a good thing if we try to use it for URLs! 
+ * 
+ * @param string $path - path or filename
+ * @return string path with backslashes converted to forward and drive letter capitalized
+ */
+function oik_normalize_path( $path ) {
+	$path = str_replace( "\\", "/", $path );
+	if ( ':' === substr( $path, 1, 1 ) ) {
+		$path = ucfirst( $path );
+	}
+	return( $path );
+}		
+
+/**
+ * Locate the wp-config.php they expected to use
+ *
+ * __FILE__ may be a symlinked directory
+ * but we need to work based on the current directory
+ * so we work our way up the directory path until we find a wp-config.php
+ * and treat that directory as abspath
+ * 
+ * The ABSPATH constant refers to the directory in which WP is installed.
+ * as we see in the comment in wp-config.php 
+ * `Absolute path to the WordPress directory.`
+ * 
+ * 
+ * What if we move wp-config.php to the directory above?
+ * then we have to set ABSPATH differently?
+ * 
+ * 
+ * @return string the normalized path to the wp-config.php file
+ */
+if ( !function_exists( "oik_batch_locate_wp_config" ) ) {
+function oik_batch_locate_wp_config() {
+	$owd = getcwd();
+	$owd = oik_normalize_path( $owd );
+	
+	$abspath = null;
+	while ( $owd ) {
+		if ( file_exists( $owd . "/wp-config.php" ) ) { 
+			$abspath = $owd . '/';
+			$owd = null;
+		} else {
+			$next = dirname( $owd );
+			//echo "Checking $next after $owd" . PHP_EOL;
+			if ( $next == $owd ) {
+				$owd = null;
+			}	else {
+				$owd = $next;
+			}
+			
+		}
+	}
+	echo "ABSPATH: $abspath" . PHP_EOL;
+	return( $abspath );
+}
+}
+
+
+/**
+ * Load Command Line Interface (CLI) functions
+ *
+ * Load some common routines that might be needed by
+ * other routines designed to be run from the command line
+ * 
+ */
+if ( !function_exists( "oik_batch_load_client_functions" ) ) { 
+function oik_batch_load_cli_functions() {
+	//$loaded = oik_require_lib( "oik-cli.php" );
+	oik_require( "libs/oik-cli.php", "oik-batch" );
+}
+}
+
 
 
 

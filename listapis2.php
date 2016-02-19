@@ -120,8 +120,13 @@ function _la_doit( $component, $previous=null ) {
   oik_require( "oik-list-previous-files.php", "oik-batch" );
   echo "Plugin: $plugin" . PHP_EOL;
   $component_type = oiksc_query_component_type( $plugin ); 
-  $files = oiksc_load_files( $plugin, $component_type );
-  $files = oikb_maybe_do_files( $files, $previous, $plugin, $component_type );
+	
+	$files = oikb_list_changed_files( $previous, $plugin, $component_type );
+	
+	if ( null === $files ) {
+		$files = oiksc_load_files( $plugin, $component_type );
+		$files = oikb_maybe_do_files( $files, $previous, $plugin, $component_type );
+	}
   oiksc_do_files( $files, $plugin, $component_type, "_la_dofile" );
   global $max_size;
   echo "Max size: $max_size" . PHP_EOL;

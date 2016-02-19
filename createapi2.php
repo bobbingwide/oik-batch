@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2013-2015
+<?php // (C) Copyright Bobbing Wide 2013-2016
 
 /** 
  * Function to invoke when createapi2.php is loaded
@@ -9,11 +9,16 @@
  * as it needs to obtain parameters using oikb_getopt()
  * 
  * @TODO - remove this limitation
+ *
+ * Include files are selected from wp-settings.php
+ * Quite a few were added in WordPress 4.4.x
  * 
  */
 function createapis_loaded( $argc, $argv ) {
   echo "In createapis_loaded" . PHP_EOL ;
-  require_once( "oik-batch.php" );
+	if ( !function_exists( "oik_batch_run_script" ) ) {
+		require_once( "oik-batch.php" );
+	}
   if ( defined( 'WP_SETUP_CONFIG' ) ) {
     if ( true == 'WP_SETUP_CONFIG' ) {
       bw_trace2( "WP_SETUP_CONFIG is already defined as true" );
@@ -26,6 +31,16 @@ function createapis_loaded( $argc, $argv ) {
   
     require_once( ABSPATH . WPINC . "/http.php" );
     require( ABSPATH . WPINC . '/class-http.php' );
+		
+		// Some, or all of these are needed for WordPress 4.4.x
+		require( ABSPATH . WPINC . '/class-wp-http-streams.php' );
+		require( ABSPATH . WPINC . '/class-wp-http-curl.php' );
+		require( ABSPATH . WPINC . '/class-wp-http-proxy.php' );
+		require( ABSPATH . WPINC . '/class-wp-http-cookie.php' );
+		require( ABSPATH . WPINC . '/class-wp-http-encoding.php' );
+    require( ABSPATH . WPINC . '/class-wp-http-response.php' );
+
+		
     
     
     require_once( ABSPATH . "wp-admin/includes/plugin.php" );
@@ -84,6 +99,22 @@ function _ca_checkignorelist( $file ) {
 	$ignore = _la_checkignorelist( $file );
 	return( $ignore );
 }
+
+
+
+/**
+ * Remove the leading directory path from the filename
+ *
+ */
+ 
+if ( !function_exists( "strip_directory_path" ) ) { 
+function strip_directory_path( $directory_path, $filename ) {
+  $directory_path = str_replace( "\\", "/", $directory_path ); 
+  $filename = str_replace( "\\", "/", $filename );
+  $filename = str_replace( $directory_path, null, $filename );
+  return( $filename );  
+}
+}  
 
 
 
@@ -253,8 +284,13 @@ function _ca_doaplugin( $component, $previous=null, $start=1 ) {
         oik_require( "admin/oik-apis.php", "oik-shortcodes" );
         //wp_register_plugin_realpath( WP_PLUGIN_DIR . "/$plugin/." );
         oik_require( "oik-list-previous-files.php", "oik-batch" );
-        $files = oiksc_load_files( $plugin, $component_type );
-        $files = oikb_maybe_do_files( $files, $previous, $component, $component_type );
+				
+				$files = oikb_list_changed_files( $previous, $plugin, $component_type );
+	
+				if ( null === $files ) {
+					$files = oiksc_load_files( $plugin, $component_type );
+					$files = oikb_maybe_do_files( $files, $previous, $component, $component_type );
+				}
         oiksc_do_files( $files, $plugin, $component_type, "_ca_dofile", $start );
       }
     } else {
@@ -272,4 +308,7 @@ function get_bloginfo( $arg) {
 }
 
 
-createapis_loaded(  $_SERVER['argc'], $_SERVER['argv'] );
+var_dump( $_SERVER );
+
+
+createapis_loaded( $_SERVER['argc'], $_SERVER['argv'] );

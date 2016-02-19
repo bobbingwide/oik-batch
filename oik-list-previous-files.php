@@ -120,9 +120,30 @@ function oikb_get_zip_source() {
  * 
  * @return string - the source folder for Git repositories
  */
-function oikb_get_git_source() {
-  $source = "c:/github";
-  return( $source );
+function oikb_get_git_source( $repository, $owner="bobbingwide" ) {
+	$source_dir = null;
+	$repos = array( "C:/github/$owner/$repository"
+								, "C:/github/$repository"
+								);
+	foreach ( $repos as $repo ) {
+		$source_dir = oikb_is_git( $repo );
+		if ( $source_dir ) {
+			break;
+		}
+	}
+  return( $source_dir );
+}
+
+/**
+ * Return the root directory of the git repository
+ *
+ * 
+ */
+function oikb_is_git( $source_dir ) {
+	$git = git();
+	$git_dir = $git->is_git( $source_dir );
+	
+	return( $git_dir );
 }
 
 /**
@@ -214,7 +235,12 @@ function oikb_relative_files( $files, $source ) {
 }
 
 
-
+/**
+ * Return the selected components source directory
+ *
+ * Question... should we sanitize the directory returned?
+ 
+ */
 function oikb_source_dir( $plugin, $component_type ) {
  switch ( $component_type ) {
     case "wordpress":
@@ -230,7 +256,7 @@ function oikb_source_dir( $plugin, $component_type ) {
       echo "Unrecognised component: $plugin component_type: $component_type" . PHP_EOL;
       $sourcedir = getcwd();
   }
-  echo "Source dir:" . $sourcedir . PHP_EOL;
+  echo "Source dir: " . $sourcedir . PHP_EOL;
   return( $sourcedir );
 
 }
@@ -271,6 +297,74 @@ function oikb_maybe_do_files( $files, $prev_version, $plugin, $component_type ) 
   echo "Changes: " . count( $dofiles ) . PHP_EOL;
   return( $dofiles );
 }
+
+/**
+ * List the changed files 
+ *
+ * If we're using a git/GitHub repository then we can easily list the changed files
+ * by using git commands.
+ * 
+ * {@link 	
+ * `git diff --name_only sha1 sha2`
+ * `git diff --name_only
+ *
+ * oikb_get_git_source() should return the directory of the git repo
+ *  
+ * use this function in preference to oikb_maybe_do_files()
+ *  
+ * 
+ */
+function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
+	$git_loaded = oik_require_lib( "git" );
+	echo $git_loaded;
+	oik_require( "libs/oik-git.php", "oik-batch" );
+	
+	$git = Git();
+	
+	$source_dir = oikb_source_dir( $plugin, $component_type );
+	$git_dir = oikb_is_git( $source_dir );
+	if ( !$git_dir ) {
+		$repository = $plugin;
+		$git_dir = oikb_get_git_source( $repository );
+	}
+	echo "Git dir: $git_dir" . PHP_EOL;
+	
+	if ( $git_dir ) {
+		$files = oikb_git_command( "changed", $prev_version );
+		$files = $git->result_as_array();
+	} else {
+		$files = null;
+	}
+	
+  echo "GIT changes: " . count( $files ) . PHP_EOL;
+	return( $files );
+
+}
+
+/**
+ * Implement a pseudo git command
+ *
+ * These are pseudo git commands - not exactly aliases
+ * but they perform a subset of what you can do with git
+ * 
+ * $command | $parms | Processing
+ * -------- | ------- | ----------
+ * status -s | n/a |  Determine if this is a git repository
+ * changed | tag | List changed files since tagged version
+ * 
+ * 
+ */
+
+function oikb_git_command( $command="status -s", $parms=null ) {
+	$git = git();
+	$result = $git->command( $command, $parms );
+	echo $result;
+	return( $result );
+}
+
+
+	
+	
 
                    
  

@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2013, 2014
+<?php // (C) Copyright Bobbing Wide 2013-2016
 
 
 if ( !function_exists( "get_bloginfo" ) ) {  
@@ -7,8 +7,23 @@ function get_bloginfo( $arg) {
 }
 }
 
+function oikb_check_time_limit() {
+	static $met = null;
+	$new_met = ini_get( 'max_execution_time' );
+	if ( $met != $new_met ) {
+		if ( $met == null ) {
+			$met = $new_met;
+		} else {
+			echo "That's odd. $met <> $new_met" . PHP_EOL;
+		}	
+	}
+}
+		
+
 /**
  * Get a response from stdin
+ *
+ * Only echo if we're going to pause, or are skipping
  *
  * @param string $text - prompt for the response
  * @param bool $pause - force a pause even when the response is "go"
@@ -17,8 +32,8 @@ function get_bloginfo( $arg) {
 function oikb_get_response( $text="Continue?", $pause=false ) {
   static $resp = false; 
 	$response = $resp;
-  echo "$text ( y=yes/n=no/s=skip/g=go/q=quit )";
   if ( $pause || ( $resp !== "g" ) && ( $resp !== "s" ) ) {
+		echo "$text ( y=yes/n=no/s=skip/g=go/q=quit )";
     $stdin = fopen( "php://stdin", "r" );
     $response = fgets( $stdin );
     fclose( $stdin );
@@ -40,6 +55,7 @@ function oikb_get_response( $text="Continue?", $pause=false ) {
       // Let the caller determine
       break;    
   }
+	oikb_check_time_limit();
   return( $response );
 }
 

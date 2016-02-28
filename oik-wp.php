@@ -301,8 +301,8 @@ function oik_wp_loaded() {
 			if ( $included_files[0] == __FILE__) {
 				 oik_batch_run();
 			}
-				// wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
-			echo "who's in charge?" . PHP_EOL;
+			// wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
+			//echo "who's in charge?" . PHP_EOL;
 		}
 	} else {
 		//echo PHP_SAPI;
@@ -314,6 +314,7 @@ function oik_wp_loaded() {
 			// if ( bw_is_wordpress() ) {
 			add_action( "admin_notices", "oik_batch_activation" );
 			add_action( "oik_admin_menu", "oik_batch_admin_menu" );
+			//add_action( "@TODO load shared libraries?
 		} 
 	}
 }

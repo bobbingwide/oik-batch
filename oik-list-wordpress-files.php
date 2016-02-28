@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2014
+<?php // (C) Copyright Bobbing Wide 2014-2016
 
 /**
  * List WordPress files
@@ -81,3 +81,29 @@ function get_wp_files( $directory ) {
 	return $files;
 }
 
+
+/**
+ * Filter WordPress files listed from Git
+ *
+ * The WordPress Git repository contains files for plugins, themes and other things that we want to handle separately. 
+ * 
+ * So filter them out. See _la_RFI
+ *
+ */
+function oikb_filter_wordpress_files( $files ) {
+	$filtered = array();
+	foreach ( $files as $file ) {
+		if ( 0 === strpos( $file, "wp-content/" ) ) {
+			if ( strpos( $file, "plugins/index.php" ) ) {
+				$filtered[] = $file;
+			} elseif ( strpos( $file, "themes/index.php" ) ) {
+				$filtered[] = $file;
+			} elseif ( $file == "wp-content/index.php" ) {
+				$filtered[] = $file;
+			}
+		}	else {
+			$filtered[] = $file;
+		}
+	}
+	return( $filtered );
+}

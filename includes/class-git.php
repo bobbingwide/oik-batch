@@ -62,9 +62,18 @@ class Git {
 		$this->commands();
 	}
 	
+	/**
+	 * Return the appropriate git command
+	 *
+	 * {@link http://stackoverflow.com/questions/8533202/list-files-in-local-git-repo}
+	 * suggests using `git ls-files` or the more detailed `git ls-tree --full-tree -r HEAD`
+	 *
+	 */
+	
 	public function commands() {
 		$this->commands = array( "status" => "status -s" 
 													 , "changed" => "diff --name-only"
+													 , "list" => "ls-files"
 													 ); 
 	}
 	
@@ -158,7 +167,7 @@ class Git {
 	 * Perform the git command and store the result of the command in this->result
 	 * The result can then be interpreted by the calling routine
 	 * invoking further methods
-	 
+	 *
 	 *
 	 * @param string $cmd the command to execute
 	 * @return string the result from the command
@@ -168,21 +177,19 @@ class Git {
 		echo $cmd . PHP_EOL;
 		$result = shell_exec( "$cmd 2>&1" );
 		$this->result = trim( $result );
-		echo "execute result:" . $result . ":" . PHP_EOL;
+		//echo "execute result:" . $result . ":" . PHP_EOL;
 		return( $result );
 	}
 	
+	/**
+	 * Return the file list as an array
+	 *
+	 * @return array of results
+	 */
 	public function result_as_array() {
-	
 		$result_array = explode( "\n", $this->result );
-		print_r( $this->result );
-		print_r( $result_array );
+		//print_r( $this->result );
+		//print_r( $result_array );
 		return( $result_array );
 	}
-		
-		
-	
-	
-
-
 }

@@ -1,14 +1,14 @@
-<?php // (C) Copyright Bobbing Wide 2013-2015
+<?php // (C) Copyright Bobbing Wide 2013-2016
 /*
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.8.1
+Version: 0.8.2
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2
 
-    Copyright 2013 - 2015 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2013 - 2016 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,

@@ -2,20 +2,34 @@
 Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI
-Requires at least: 4.2
-Tested up to: 4.3.1
-Stable tag: 0.8.1
+Requires at least: 4.4
+Tested up to: 4.4.2
+Stable tag: 0.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
 Domain Path: /languages/
 
 == Description ==
-Batch interface to remote WordPress servers
+Batch interface to WordPress
 
-* Allows you to run parts of WordPress in batch mode.
-* No connection to the database
+* oik-wp v0.0.0 - Batch WordPress 
+* oik-batch v0.8.2 - Batch interface to WordPress servers
+
+
 * Allows development and testing of plugin functions in a native environment, such as Windows
+* Provides some basic APIs to assist in CLI processing
+
+oik-wp
+
+* Allows you to run WordPress from the command line
+* Connects to your chosen local WordPress environment
+
+
+oik-batch
+
+* Allows you to run parts of WordPress in batch mode
+* No connection to the database
 
 
 == Installation ==
@@ -107,6 +121,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.2 = 
+oik-batch now only supports WordPress 4.4 or higher
+
 = 0.8.1 =
 Added oik-wp.php - Standalone WordPress main routine
 
@@ -135,6 +152,11 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.2 = 
+* Fixed: Improve performance parsing git based repositories [github bobbingwide oik-batch issue 1]
+* Fixed: Support direct invocation of batch logic in a plugin [github bobbingwide oik-batch issue 2]
+* Fixed: createapi2 does not work on WordPress 4.4.x [github bobbingwide oik-batch issue 3]
+
 = 0.8.1 =
 * Added: oik-wp.php - Standalone WordPress, not WP-cli
 * Added: libs/oik-cli.php - Library file for 'batch' APIs

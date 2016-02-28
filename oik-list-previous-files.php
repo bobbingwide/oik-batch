@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2014
+<?php // (C) Copyright Bobbing Wide 2014-2016
 
 
 /**
@@ -304,9 +304,8 @@ function oikb_maybe_do_files( $files, $prev_version, $plugin, $component_type ) 
  * If we're using a git/GitHub repository then we can easily list the changed files
  * by using git commands.
  * 
- * {@link 	
  * `git diff --name_only sha1 sha2`
- * `git diff --name_only
+ * `git diff --name_only`
  *
  * oikb_get_git_source() should return the directory of the git repo
  *  
@@ -319,28 +318,40 @@ function oikb_maybe_do_files( $files, $prev_version, $plugin, $component_type ) 
  */
 function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
 	$git_loaded = oik_require_lib( "git" );
-	echo $git_loaded;
-	oik_require( "libs/oik-git.php", "oik-batch" );
-	
-	$git = Git();
-	
-	$source_dir = oikb_source_dir( $plugin, $component_type );
-	$git_dir = oikb_is_git( $source_dir );
-	if ( !$git_dir ) {
-		$repository = $plugin;
-		$git_dir = oikb_get_git_source( $repository );
+	if ( $git_loaded && !is_wp_error( $git_loaded ) ) {
+		// Hooray - loaded by oik_require_lib() - that's a bonus
+	} else {
+		oik_require( "libs/oik-git.php", "oik-batch" );
+		git();
 	}
-	echo "Git dir: $git_dir" . PHP_EOL;
 	
-	if ( $git_dir ) {
-		$files = oikb_git_command( "changed", $prev_version );
-		$files = $git->result_as_array();
-		chdir( $git_dir );
+	if ( class_exists( "Git" ) ) {
+	
+		$git = Git();
+	
+		$source_dir = oikb_source_dir( $plugin, $component_type );
+		$git_dir = oikb_is_git( $source_dir );
+		if ( !$git_dir ) {
+			$repository = $plugin;
+			$git_dir = oikb_get_git_source( $repository );
+		}
+		echo "Git dir: $git_dir" . PHP_EOL;
+	
+		if ( $git_dir ) {
+			if ( $prev_version == '0' ) {
+				$files = oikb_git_command( "list" );
+			} else {
+				$files = oikb_git_command( "changed", $prev_version );
+			}
+			$files = $git->result_as_array();
+			chdir( $git_dir );
+		} else {
+			$files = null;
+		}
 	} else {
 		$files = null;
 	}
-	
-  echo "GIT changes: " . count( $files ) . PHP_EOL;
+	echo "GIT changes: " . count( $files ) . PHP_EOL;
 	return( $files );
 
 }
@@ -355,14 +366,20 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
  * -------- | ------- | ----------
  * status -s | n/a |  Determine if this is a git repository
  * changed | tag | List changed files since tagged version
- * 
- * 
+ * list | n/a | List all files in the repository
+ *
+ * @param string $command 
+ * @param string $parms
+ * @param bool $verbose 
  */
 
-function oikb_git_command( $command="status -s", $parms=null ) {
+function oikb_git_command( $command="status -s", $parms=null, $verbose=false ) {
 	$git = git();
 	$result = $git->command( $command, $parms );
-	echo $result;
+	if ($verbose ) {
+		echo $result;
+		echo PHP_EOL;
+	}	
 	return( $result );
 }
 

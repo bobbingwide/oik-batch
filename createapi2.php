@@ -307,8 +307,9 @@ function get_bloginfo( $arg) {
 }
 }
 
-
 var_dump( $_SERVER );
-
-
+$start = microtime( true );
 createapis_loaded( $_SERVER['argc'], $_SERVER['argv'] );
+$end = microtime( true );
+$elapsed = $end - $start;
+echo "Elapsed: $elapsed" . PHP_EOL;

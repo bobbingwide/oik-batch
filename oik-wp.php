@@ -28,6 +28,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
     http://www.gnu.org/licenses/gpl-2.0.html
 
 */
+
+oik_wp_loaded();
  
  
 /**
@@ -112,11 +114,19 @@ function oik_batch_define_constants() {
 
 /**
  * Start WordPress in the current directory
+ * 
+ * We can't just run index.php rather than wp-config.php since we don't want WordPress to do normal WordPress stuff
+ * Since we don't run wp-load.php, (why not?)  there are some things that we need to set up, particularly for WPMS, that would have been done
+ * in wp() 
+ * 
+ * See 
+ * wp-blog-header.php
+ *   wp-load.php
  *
  */
 function oik_batch_start_wordpress() {
-  global $wp_did_header;
-  $wp_did_header = true;
+  //global $wp_did_header;
+  //$wp_did_header = true;
 	$abspath = oik_batch_locate_wp_config();
 	if ( !$abspath ) {
 		$abspath = __FILE__;
@@ -124,7 +134,11 @@ function oik_batch_start_wordpress() {
 		$abspath = dirname( dirname( dirname( dirname( $abspath ) ) ) );
 		$abspath .= "/";
 	}
+	oik_batch_set_domain( $abspath );
+	global $wpdb, $current_site;
   require( $abspath . "wp-config.php" );
+	//require( $abspath . "wp-load.php" );
+	//require( $abspath .  "index.php" );
 }
 
 /**
@@ -328,11 +342,14 @@ function oik_wp_loaded() {
  * and invoke it using oik_path()
  * If it's a fully specified file name that exists then we call it directly
  */
+ 
+//if ( !function_exists( "oik_batch_run_script" ) ) { 
 function oik_batch_run_script( $script ) {
   if ( file_exists( $script ) ) {
     require_once( $script ); 
 		echo "Script required once" . PHP_EOL;
 		do_action( "run_$script" );
+		echo "Did: run_$script" . PHP_EOL;
   } else {
     $script_parts = pathinfo( $script );
     print_r( $script_parts );
@@ -353,6 +370,7 @@ function oik_batch_run_script( $script ) {
     }  
   }
 }
+//}
 
 /**
  * Run the script specified having pre-loaded wp-batch code
@@ -375,6 +393,56 @@ function oik_batch_run() {
 }
 
 
+/**
+ * WordPress MultiSite needs to know which domain we're working on
+ * 
+ * We extract it from $_SERVER['argv'] array, looking for url=domain/path
+ *
+ * We need to know the URL e.g. qw/oikcom or wp-a2z in order to be able to set both HTTP_HOST and REQUEST_URI
+ */																 
+function oik_batch_set_domain( $abspath ) {
+	$domain = oik_batch_query_value_from_argv();
+	echo "Domain: $domain" . PHP_EOL;
+	
+	if ( !isset( $_SERVER['HTTP_HOST']) ) {
+		//print_r( $_SERVER );
+		$_SERVER['HTTP_HOST'] = $domain;
+	}
+	
+	if ( !isset( $_SERVER['REQUEST_URI'] ) ) {
+		$_SERVER['REQUEST_URI'] = "/";
+	}	
+	
+	if ( !isset( $_SERVER['SERVER_NAME'] ) ) {
+		$_SERVER['SERVER_NAME'] = $domain;
+		$_SERVER['SERVER_PORT'] = "80";
+	}
 
-oik_wp_loaded();
+// $_SERVER['REQUEST_URI'] = $f('path') . ( isset( $url_parts['query'] ) ? '?' . $url_parts['query'] : '' );
+// $_SERVER['SERVER_PORT'] = \WP_CLI\Utils\get_flag_value( $url_parts, 'port', '80' );
+// $_SERVER['QUERY_STRING'] = $f('query');
+}
 
+/**
+ * Obtain a value from a NVP parameter
+ *
+ * @param string $key Not expected to be prefixed with --
+ * @param string $default Default value if not found
+ * @return string value of the parameter
+ */
+function oik_batch_query_value_from_argv( $key="url", $default="localhost" ) {
+	$argv = $_SERVER['argv'];
+	$value = $default;
+	if ( $_SERVER['argc'] ) {
+		foreach ( $argv as $arg_value ) {
+			if ( false !== strpos( $arg_value, "=" ) ) {
+			 $arg_value = strtolower( $arg_value );
+				$arg_parts = explode( "=", $arg_value );
+				if ( count( $arg_parts ) == 2 && $arg_parts[0] == $key ) {
+					$value = $arg_parts[1];
+				}
+			}
+		}
+	}	
+	return( $value );
+}

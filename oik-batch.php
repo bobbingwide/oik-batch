@@ -317,6 +317,8 @@ function oik_batch_admin_menu() {
  * and invoke it using oik_path()
  * If it's a fully specified file name that exists then we call it directly
  */
+ 
+if ( !function_exists( "oik_batch_run_script" ) ) { 
 function oik_batch_run_script( $script ) {
   if ( file_exists( $script ) ) {
     require_once( $script ); 
@@ -339,6 +341,7 @@ function oik_batch_run_script( $script ) {
       echo "Cannot find script to run: $required_file" . PHP_EOL;
     }  
   }
+}
 }
 
 /**

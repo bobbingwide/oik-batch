@@ -3,8 +3,8 @@ Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI
 Requires at least: 4.4
-Tested up to: 4.4.2
-Stable tag: 0.8.2
+Tested up to: 4.5-beta2
+Stable tag: 0.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -13,8 +13,8 @@ Domain Path: /languages/
 == Description ==
 Batch interface to WordPress
 
-* oik-wp v0.0.0 - Batch WordPress 
-* oik-batch v0.8.2 - Batch interface to WordPress servers
+* oik-wp v0.0.1 - Batch WordPress 
+* oik-batch v0.8.3 - Batch interface to WordPress servers
 
 
 * Allows development and testing of plugin functions in a native environment, such as Windows
@@ -121,6 +121,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.3 =
+Now supports local running of createapi2.php from oik-shortcodes.php and WordPress MultiSite ( sub-domain installs ).
+
 = 0.8.2 = 
 oik-batch now only supports WordPress 4.4 or higher
 
@@ -152,6 +155,12 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.3 =
+* Fixed: Add oikb_check_time_limit() [github bobbingwide oik-batch issues 4]
+* Fixed: Don't list plugin or theme files for 'wordpress' component [github bobbingwide oik-batch issues 5]
+* Added: Support listing ALL files in a Git repository
+* Added: Support running against WordPress MultiSite [github bobbingwide oik-batch issues 6]
+
 = 0.8.2 = 
 * Fixed: Improve performance parsing git based repositories [github bobbingwide oik-batch issue 1]
 * Fixed: Support direct invocation of batch logic in a plugin [github bobbingwide oik-batch issue 2]

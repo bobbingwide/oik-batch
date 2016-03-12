@@ -110,6 +110,7 @@ function _la_checkignorelist( $file ) {
 		// $ignores = bw_assoc( bw_as_array( "oik-activation,oik-docblock,bobbnotwp" ) );
 		$ignore_files = "wp-config,oik-docblock,bobbnotwp,geshi,cron-svn-pots,extract,ExtractTest,l10n,makepot,mo,po,streams,pot-ext-meta,";
 		$ignore_files .= ",extension.cache.dbm,extension.cache.mysql,getid3.lib,module.archive.gzip,module.archive.rar";
+		$ignore_files .= ",noop";
 		$ignores = bw_assoc( bw_as_array( $ignore_files ) );
 		$ignore = bw_array_get( $ignores, $filename, false );
 		if ( $ignore ) {

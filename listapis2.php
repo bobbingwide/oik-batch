@@ -69,7 +69,7 @@ function _la_doapis( $file, $plugin, $component_type ) {
   static $count_functions = 0;
   static $count_files = 0;
   $count_files++;
-  $apis = _oiksc_get_apis2( $file, true, $component_type );
+  $apis = _oiksc_get_apis2( $file, true, $component_type, $plugin );
   $file = strip_directory_path( ABSPATH, $file );
   // plugin,file,class,parent class,method,startline,endline,size
   echo "$count,$count_classes,$count_files,$plugin,$file,,,,,,," . PHP_EOL;

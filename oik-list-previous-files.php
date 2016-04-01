@@ -137,7 +137,8 @@ function oikb_get_git_source( $repository, $owner="bobbingwide" ) {
 /**
  * Return the root directory of the git repository
  *
- * 
+ * @param string $source_dir
+ * @return string Git dir
  */
 function oikb_is_git( $source_dir ) {
 	$git = git();
@@ -313,10 +314,15 @@ function oikb_maybe_do_files( $files, $prev_version, $plugin, $component_type ) 
  *
  * Note: Having found the git directory we need to stay in this directory in order to parse all the files
  * This also means that the server needs to have the git extract as well!  
- *  
+ * 
+ * 
+ * @param string $prev_version - the previous version - normally an SHA
+ * @param string $plugin the plugin or theme slug
+ * @param string $component_type 
+ * @param object $oiksc_parse_status - parse status object
  * 
  */
-function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
+function oikb_list_changed_files( $prev_version, $plugin, $component_type, $oiksc_parse_status=null ) {
 	$git_loaded = oik_require_lib( "git" );
 	if ( $git_loaded && !is_wp_error( $git_loaded ) ) {
 		// Hooray - loaded by oik_require_lib() - that's a bonus
@@ -330,6 +336,7 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
 		$git = Git();
 	
 		$source_dir = oikb_source_dir( $plugin, $component_type );
+		echo "Source dir: $source_dir" . PHP_EOL;
 		$git_dir = oikb_is_git( $source_dir );
 		if ( !$git_dir ) {
 			$repository = $plugin;
@@ -344,14 +351,30 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type ) {
 				$files = oikb_git_command( "changed", $prev_version );
 			}
 			$files = $git->result_as_array();
-			chdir( $git_dir );
+			//chdir( $git_dir );
 		} else {
 			$files = null;
+			echo "No Git repo found for $plugin $component_type" . PHP_EOL;
 		}
 	} else {
 		$files = null;
 	}
-	echo "GIT changes: " . count( $files ) . PHP_EOL;
+	$of_n = count( $files );
+	
+	if ( $of_n && $oiksc_parse_status ) {
+		echo "GIT changes: " . $of_n . PHP_EOL;
+		$current_sha = oikb_git_command( "current" );
+		echo "Current SHA: $current_sha" . PHP_EOL; 
+		$oiksc_parse_status->set_current_sha( $current_sha );
+		$oiksc_parse_status->set_current_of_n( $of_n );
+		$oiksc_parse_status->restart_processing();
+		
+		//$to_sha = $oiksc_parse_status->get_to_sha();
+		//if ( !$to_sha ) {
+		//	$oiksc_parse_status->set_to_sha( $current_sha );
+		//		$oiksc_parse_status->set_of_n( $of_n );
+		//}
+	}
 	return( $files );
 
 }

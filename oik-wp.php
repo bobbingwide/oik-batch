@@ -424,7 +424,13 @@ function oik_batch_set_domain( $abspath ) {
 }
 
 /**
- * Obtain a value from a NVP parameter
+ * Obtain a value for a command line parameter
+ *
+ * If the required parameter key is numeric then we take the positional parameter
+ * else we take value of an NVP pair.
+ *
+ * This is a simple hack that's not as advanced as WP-CLI, which allow --no- prefixes to set parameters to false
+ * Here we're really only interested in getting url=
  *
  * @param string $key Not expected to be prefixed with --
  * @param string $default Default value if not found
@@ -434,15 +440,51 @@ function oik_batch_query_value_from_argv( $key="url", $default="localhost" ) {
 	$argv = $_SERVER['argv'];
 	$value = $default;
 	if ( $_SERVER['argc'] ) {
-		foreach ( $argv as $arg_value ) {
-			if ( false !== strpos( $arg_value, "=" ) ) {
-			 $arg_value = strtolower( $arg_value );
-				$arg_parts = explode( "=", $arg_value );
-				if ( count( $arg_parts ) == 2 && $arg_parts[0] == $key ) {
-					$value = $arg_parts[1];
-				}
-			}
+		if ( is_numeric( $key ) ) {
+			$value = oik_batch_query_positional_value_from_argv( $_SERVER['argv'], $key, $default );
+		} else {
+			$value = oik_batch_query_nvp_value_from_argv( $_SERVER['argv'], $key, $default );
 		}
 	}	
 	return( $value );
+}
+
+/**
+ * Query a positional parameter
+ *
+ * We start counting from 0 - which allows us to get the routine name
+ * 
+ *
+ */
+function oik_batch_query_positional_value_from_argv( $argv, $index, $default ) {
+	$arg_index = 0;
+	$value = $default;
+	foreach ( $argv as $key => $arg_value ) {
+		if ( false === strpos( $arg_value, "=" ) ) {
+			if ( $arg_index == $index ) {
+				$value = $arg_value;
+			}
+			$arg_index++;
+		}
+			
+	}
+	return( $value );
+}
+
+/**
+ * 
+ */
+function oik_batch_query_nvp_value_from_argv( $argv, $key, $default ) {
+	$value = $default;
+	foreach ( $argv as $arg_value ) {
+		if ( false !== strpos( $arg_value, "=" ) ) {
+		 $arg_value = strtolower( $arg_value );
+			$arg_parts = explode( "=", $arg_value );
+			if ( count( $arg_parts ) == 2 && $arg_parts[0] == $key ) {
+				$value = $arg_parts[1];
+			}
+		}
+	}
+	return( $value );
+
 }

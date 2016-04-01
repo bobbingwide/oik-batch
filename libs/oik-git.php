@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2015
+<?php // (C) Copyright Bobbing Wide 2015, 2016
 /**
  * git functions
  * 
@@ -9,7 +9,7 @@
  * Conflicts: 
  *
  * This file should eventually be a shared library file providing an interface to git, and potentially GitHub, from PHP routines.
- * I'm sure there are many instances about. But I've not looked
+ * I'm sure there are many instances about. But I've not looked at them yet. 
  *
  */
 

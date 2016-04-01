@@ -3,8 +3,8 @@ Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI
 Requires at least: 4.4
-Tested up to: 4.5-beta2
-Stable tag: 0.8.3
+Tested up to: 4.5-RC1
+Stable tag: 0.8.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -15,6 +15,7 @@ Batch interface to WordPress
 
 * oik-wp v0.0.1 - Batch WordPress 
 * oik-batch v0.8.3 - Batch interface to WordPress servers
+* oik-git v0.8.4 - Simple Git status checker
 
 
 * Allows development and testing of plugin functions in a native environment, such as Windows
@@ -30,6 +31,8 @@ oik-batch
 
 * Allows you to run parts of WordPress in batch mode
 * No connection to the database
+
+* Run under oik-batch
 
 
 == Installation ==
@@ -57,6 +60,7 @@ Under development:
 
 * oik-load.php - Load a single plugin
 * oik-site.php - PROTOTYPE web site checker
+* oik-git.php - Check the status of a whole host of Git repos
 
 * readme.txt - this file ( also README.md ) 
 
@@ -121,6 +125,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.4 =
+Co-requisite changes for oik-shortcode running locally against WordPress MultiSite sites
+
 = 0.8.3 =
 Now supports local running of createapi2.php from oik-shortcodes.php and WordPress MultiSite ( sub-domain installs ).
 
@@ -155,6 +162,13 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.4 = 
+* Added: Various class Git improvements [github bobbingwide oik-batch issue 7]
+* Added: oik-git.php to invoke Git::check_status() [github bobbingwide oik-batch issue 7]
+* Added: Support WordPress MultiSite installation with url=site parameter [github bobbingwide oik-batch issue 6]
+* Added: Co-req changes for oik-shortcodes to store parse status in post meta [github bobbingwide oik-shortcodes issue 21]
+* Added: Changes for remote git repositories when running locally [github bobbingwide oik-shortcodes issue 22]
+
 = 0.8.3 =
 * Fixed: Add oikb_check_time_limit() [github bobbingwide oik-batch issues 4]
 * Fixed: Don't list plugin or theme files for 'wordpress' component [github bobbingwide oik-batch issues 5]

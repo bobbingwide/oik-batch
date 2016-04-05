@@ -2,6 +2,9 @@
 
 /**
  * Run git status against each plugin and theme to check if the git repository has changes that need to be committed
+ *
+ * Syntax: batch oik-git.php
+ * Run against the parent folder of the git repositories
  */
 oik_git_loaded();
 

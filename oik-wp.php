@@ -28,9 +28,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
     http://www.gnu.org/licenses/gpl-2.0.html
 
 */
-
 oik_wp_loaded();
- 
  
 /**
  * Turn on debugging for oik-wp
@@ -60,7 +58,6 @@ function oik_batch_trace( $trace_on=false ) {
   } else {
     // We don't do the defines so it can be done later.
   } 
-   
 }
 
 /**

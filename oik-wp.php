@@ -334,18 +334,25 @@ function oik_wp_loaded() {
 }
 
 /**
+ * Run a script in batch
  *
- *
+ * @TODO Check these comments
  * If the file name given is in the form of a plugin file name e.g. plugin/plugin.php
  * then we can invoke it using oik_path() 
  * If it's just a simple name then we assume it's in the ??? folder and we need to append .php 
  * and invoke it using oik_path()
- * If it's a fully specified file name that exists then we call it directly
+ * If it's a fully specified file name that exists then we call it directly.
+ *
+ * The script can be run by simply loading the file
+ * and/or it can implement an action hook for "run_$script"
+ *
+ * @param string $script the file to load and run
+ *
  */
- 
 //if ( !function_exists( "oik_batch_run_script" ) ) { 
 function oik_batch_run_script( $script ) {
   if ( file_exists( $script ) ) {
+		oik_require( "oik-login.inc", "oik-batch" );
     require_once( $script ); 
 		echo "Script required once" . PHP_EOL;
 		do_action( "run_$script" );

@@ -51,9 +51,9 @@ function oik_batch_trace( $trace_on=false ) {
     if ( !defined( 'BW_TRACE_ON' )  ) {
       define( 'BW_TRACE_CONFIG_STARTUP', true );
       define( 'BW_TRACE_ON', true);
-      define( 'BW_ACTIONS_ON', true );
+      //define( 'BW_ACTIONS_ON', true );
       define( 'BW_TRACE_RESET', false );
-      define( 'BW_ACTIONS_RESET', false );
+      //define( 'BW_ACTIONS_RESET', false );
     }  
   } else {
     // We don't do the defines so it can be done later.
@@ -403,6 +403,8 @@ function oik_batch_run() {
  * We extract it from $_SERVER['argv'] array, looking for url=domain/path
  *
  * We need to know the URL e.g. qw/oikcom or wp-a2z in order to be able to set both HTTP_HOST and REQUEST_URI
+ * 
+ * @param string $abspath
  */																 
 function oik_batch_set_domain( $abspath ) {
 	$domain = oik_batch_query_value_from_argv();

@@ -7,6 +7,12 @@ function get_bloginfo( $arg) {
 }
 }
 
+/**
+ * Check the current time limit
+ *
+ * Some routines reset the time limit. This can cause problems, so this
+ * function can be used to see if it's been changed.
+ */
 function oikb_check_time_limit() {
 	static $met = null;
 	$new_met = ini_get( 'max_execution_time' );
@@ -18,10 +24,9 @@ function oikb_check_time_limit() {
 		}	
 	}
 }
-		
 
 /**
- * Get a response from stdin
+ * Prompt for a response from stdin
  *
  * Only echo if we're going to pause, or are skipping
  *

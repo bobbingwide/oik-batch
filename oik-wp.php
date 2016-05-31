@@ -132,6 +132,7 @@ function oik_batch_start_wordpress() {
 		$abspath .= "/";
 	}
 	oik_batch_set_domain( $abspath );
+	oik_batch_set_path();
 	global $wpdb, $current_site;
   require( $abspath . "wp-config.php" );
 	//require( $abspath . "wp-load.php" );
@@ -403,9 +404,17 @@ function oik_batch_run() {
  * We extract it from $_SERVER['argv'] array, looking for url=domain/path
  *
  * We need to know the URL e.g. qw/oikcom or wp-a2z in order to be able to set both HTTP_HOST and REQUEST_URI
+ *
+ * For WPMS with a subdirectory install we need to be able to differentiate between the directory in which WordPress is installed
+ * 
+ * and the directory for the subdomain
+ * So we'll need a value for path too?
+ * 
+ * 
+ * 
  * 
  * @param string $abspath
- */																 
+ */
 function oik_batch_set_domain( $abspath ) {
 	$domain = oik_batch_query_value_from_argv();
 	echo "Domain: $domain" . PHP_EOL;
@@ -427,6 +436,16 @@ function oik_batch_set_domain( $abspath ) {
 // $_SERVER['REQUEST_URI'] = $f('path') . ( isset( $url_parts['query'] ) ? '?' . $url_parts['query'] : '' );
 // $_SERVER['SERVER_PORT'] = \WP_CLI\Utils\get_flag_value( $url_parts, 'port', '80' );
 // $_SERVER['QUERY_STRING'] = $f('query');
+}
+
+/**
+ * Set the path for WPMS
+ */
+function oik_batch_set_path() {
+	$path = oik_batch_query_value_from_argv( "path", null );
+	if ( $path ) {
+		$_SERVER['REQUEST_URI'] = $path;
+	}
 }
 
 /**

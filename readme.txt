@@ -3,8 +3,8 @@ Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI
 Requires at least: 4.4
-Tested up to: 4.5-RC1
-Stable tag: 0.8.4
+Tested up to: 4.5.2
+Stable tag: 0.8.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -58,6 +58,7 @@ Currently:
 
 Under development:
 
+* oik-locurl.php - Localisation of an imported database - report/set siteurl and home
 * oik-load.php - Load a single plugin
 * oik-site.php - PROTOTYPE web site checker
 * oik-git.php - Check the status of a whole host of Git repos
@@ -125,6 +126,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.5 = 
+Required for oik-locurl.php to partly localise an imported database
+
 = 0.8.4 =
 Co-requisite changes for oik-shortcode running locally against WordPress MultiSite sites
 
@@ -162,6 +166,13 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.5 = 
+* Added: Localisation of imported database. Partial solution for siteurl and home. [github bobbingwide oik-batch issues 8]
+* Changed: Accept path= paramter for WPMS [github bobbingwide oik-batch issue 6]
+* Changed: Trace levels and docblocks
+* Changed: Add Syntax: and note about current directory
+* Fixed: Preload oik-login.inc in oik_batch_run_script
+
 = 0.8.4 = 
 * Added: Various class Git improvements [github bobbingwide oik-batch issue 7]
 * Added: oik-git.php to invoke Git::check_status() [github bobbingwide oik-batch issue 7]

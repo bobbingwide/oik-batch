@@ -245,7 +245,7 @@ function oikb_relative_files( $files, $source ) {
 function oikb_source_dir( $plugin, $component_type ) {
  switch ( $component_type ) {
     case "wordpress":
-      $sourcedir = trim( ABSPATH, '/' ); 
+      $sourcedir = rtrim( ABSPATH, '/' ); 
       break;
     case "plugin":
       $sourcedir = WP_PLUGIN_DIR . "/$plugin";
@@ -399,9 +399,11 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type, $oiks
 function oikb_git_command( $command="status -s", $parms=null, $verbose=false ) {
 	$git = git();
 	$result = $git->command( $command, $parms );
-	if ($verbose ) {
+	if ( $verbose ) {
+		echo $command . PHP_EOL;
 		echo $result;
 		echo PHP_EOL;
+		
 	}	
 	return( $result );
 }

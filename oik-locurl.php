@@ -26,8 +26,9 @@ function oik_locurl_loaded() {
 	echo $locurl . PHP_EOL;
 	
 	if ( !$locurl ) {
-		echo "Please specify the local URL for the site" . PHP_EOL;
-		echo "Syntax: oikwp oik-locurl locurl" . PHP_EOL;
+		//echo "Please specify the local URL for the site" . PHP_EOL;
+		//echo "Syntax: oikwp oik-locurl locurl" . PHP_EOL;
+		oik_locurl_report_options();
 	} else {
 		oik_locurl_update_options( $locurl );
 	}
@@ -37,6 +38,13 @@ function oik_locurl_loaded() {
 	} else {
 		echo "Site is not MultiSite" . PHP_EOL;
 	}
+}
+
+function oik_locurl_report_options() {
+	$siteurl = get_option( "siteurl" );
+	$home = get_option( "home" );
+	echo "Option: siteurl is $siteurl" . PHP_EOL;
+	echo "Option: home is $home" . PHP_EOL;
 }
 
 /**

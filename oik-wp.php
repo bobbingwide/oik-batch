@@ -352,7 +352,7 @@ function oik_batch_run_script( $script ) {
   if ( file_exists( $script ) ) {
 		oik_require( "oik-login.inc", "oik-batch" );
     require_once( $script ); 
-		echo "Script required once" . PHP_EOL;
+		echo "Script required once: $script" . PHP_EOL;
 		do_action( "run_$script" );
 		echo "Did: run_$script" . PHP_EOL;
   } else {

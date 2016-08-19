@@ -1,5 +1,5 @@
 <phpunit
-	bootstrap="cd.php"
+	bootstrap="../oik-batch/oik-wp.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"

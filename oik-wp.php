@@ -290,8 +290,8 @@ function oik_wp_activation() {
 function oik_wp_loaded() {
 	if ( PHP_SAPI == "cli" ) {
 		if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
-			// This is WP-CLI
-		} else {
+			// This is WP-CLI, so we don't do anything.
+		} else {	
 			oik_batch_start_wordpress();
 			
 			/*
@@ -312,7 +312,13 @@ function oik_wp_loaded() {
 			$included_files = get_included_files();
 			if ( $included_files[0] == __FILE__) {
 				 oik_batch_run();
-			}
+			} else {
+			
+				if ( false !== strpos( $_SERVER['argv'][0], "phpunit" ) ) {
+					// This is PHPUnit
+					oik_batch_load_wordpress_develop_tests();
+				}
+			}	
 			// wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
 			//echo "who's in charge?" . PHP_EOL;
 		}
@@ -512,4 +518,14 @@ function oik_batch_query_nvp_value_from_argv( $argv, $key, $default ) {
 	}
 	return( $value );
 
+}
+
+/**
+ * Locate and load the parts we need from WordPress develop tests
+ *
+ * 
+ */
+function oik_batch_load_wordpress_develop_tests() {
+	//gob();
+	oik_require( "tests/bootstrap.php", "oik-batch" );
 }

@@ -1,0 +1,65 @@
+{
+    "event": "suiteStart",
+    "suite": "",
+    "tests": 4
+}{
+    "event": "suiteStart",
+    "suite": "UnitTest",
+    "tests": 2
+}{
+    "event": "testStart",
+    "suite": "UnitTest",
+    "test": "UnitTest::test_case"
+}{
+    "event": "test",
+    "suite": "UnitTest",
+    "test": "UnitTest::test_case",
+    "status": "pass",
+    "time": 0.0012149810791016,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "UnitTest",
+    "test": "UnitTest::test_oik_path_available"
+}{
+    "event": "test",
+    "suite": "UnitTest",
+    "test": "UnitTest::test_oik_path_available",
+    "status": "pass",
+    "time": 0.0001220703125,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "suiteStart",
+    "suite": "Tests_WordPress",
+    "tests": 2
+}{
+    "event": "testStart",
+    "suite": "Tests_WordPress",
+    "test": "Tests_WordPress::test_get_post_meta_function_exists"
+}{
+    "event": "test",
+    "suite": "Tests_WordPress",
+    "test": "Tests_WordPress::test_get_post_meta_function_exists",
+    "status": "pass",
+    "time": 0.00017499923706055,
+    "trace": [],
+    "message": "",
+    "output": ""
+}{
+    "event": "testStart",
+    "suite": "Tests_WordPress",
+    "test": "Tests_WordPress::test_factory_methods_available"
+}{
+    "event": "test",
+    "suite": "Tests_WordPress",
+    "test": "Tests_WordPress::test_factory_methods_available",
+    "status": "pass",
+    "time": 3.7544438838959,
+    "trace": [],
+    "message": "",
+    "output": ""
+}

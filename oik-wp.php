@@ -124,7 +124,10 @@ function oik_batch_define_constants() {
 function oik_batch_start_wordpress() {
   //global $wp_did_header;
   //$wp_did_header = true;
-	$abspath = oik_batch_locate_wp_config();
+	$abspath = oik_batch_locate_wp_config_for_phpunit();
+	if ( !$abspath ) {
+		$abspath = oik_batch_locate_wp_config();
+	}
 	if ( !$abspath ) {
 		$abspath = __FILE__;
 		echo "Loading WordPress wp-config.php" . PHP_EOL;
@@ -299,6 +302,8 @@ function oik_wp_loaded() {
 			 * This code is probably all rubbish now!
 			 */
 			echo "I got here" . PHP_EOL;
+			echo getcwd() . PHP_EOL;
+			
 			oik_batch_debug();
 			oik_batch_trace( true );
       
@@ -529,3 +534,54 @@ function oik_batch_load_wordpress_develop_tests() {
 	//gob();
 	oik_require( "tests/bootstrap.php", "oik-batch" );
 }
+
+/**
+ * Reset current working directory under PHPUnit
+ *
+ * See notes in Issue #9
+ */
+function oik_batch_locate_wp_config_for_phpunit() {
+	$abspath = null;
+	if ( false !== strpos( $_SERVER['argv'][0], "phpunit" ) ) {
+		$pre_phpunit_cd = getenv( "PRE_PHPUNIT_CD" );
+		if ( $pre_phpunit_cd ) {
+		 echo "Searching for wp-config.php in directories leading to: $pre_phpunit_cd" . PHP_EOL;
+		 $abspath = oik_batch_cd_drill_down( $pre_phpunit_cd );
+		}
+	}
+	return( $abspath );
+}
+
+/**
+ * Drill down to locate the lowest file
+ * 
+ * In Windows, when you're using symlinks and PHP's chdir() the resulting directory reported by getcwd()
+ * reflects the real directory. This might not be the one you first thought of.
+ * It makes finding files a little tricky, hence the need for this function.
+ *
+ * @param string $path the ending directory
+ * @param string $locate_file the file we're looking for
+ * @return string|null the lowest directory or null
+ */
+function oik_batch_cd_drill_down( $path, $locate_file="wp-config.php" ) {
+	$abspath = null;
+	$path = str_replace( "\\", "/", $path );
+  $paths = explode( "/", $path );
+	foreach ( $paths as $cd ) {
+		$success = chdir( $cd );
+		if ( $success ) {
+			$now = getcwd();
+			//echo "$cd got me here $now" . PHP_EOL;
+			if ( file_exists( $locate_file ) ) {
+				$abspath = $now;
+				$abspath .= '/';
+				echo "Found $locate_file in: $abspath" . PHP_EOL;
+			}
+		} else {
+			echo "Error performing chdir to $cd" . PHP_EOL;
+		}
+	}
+	return( $abspath );
+}
+		
+

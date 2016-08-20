@@ -5,8 +5,8 @@
  
  * For running WordPress plugin and/or theme unit tests under PHPUnit.
  
- * Normally, the bootstrap file is invoked by phpunit ( 4.8.0, not sure about 5.5.0 ), loading
- * phpunit.xml in preference to phpunit.xml.dist,
+ * Normally, the bootstrap file is invoked by phpunit, 
+ * loading phpunit.xml in preference to phpunit.xml.dist,
  * and finding the bootstrap parameter in the main tag
  * `<phpunit bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true">`
  *
@@ -17,10 +17,12 @@
  * 
  * oik-wp will instantiate WordPress, with all the active plugins and themes
  * and without resetting the database.
+ 
+ * @TODO Actually, it should reset the database to a defined checkpoint.
  *
  *
  * The bootstrap file for wordpress-develop-tests does a lot of things including resetting the database.
- * But most importantly it loads the PHP classes we need ( WP_blah )
+ * But most importantly it loads the PHP classes that we need to develop our tests ( WP_UnitTestCase )
  * 
  * We would like to try running tests on any database without destroying the original contents.
  * In this code we're trying to answer the questions...
@@ -45,14 +47,14 @@ bootstrap_loaded();
  Having looked at a number of unit test routines for WordPress plugins there appear to be a couple of approaches
  of getting their code loaded into the test suite.
  
- Using mu_plugins loaded
+ # Using mu_plugins loaded
  
  
  1. Load the wordpress-develop-tests functions.php
  2. This provides tests_add_filter() which enables them to register code to run in response to "muplugins_loaded"
  3. Load the wordpress-develop-tests boostrap.php
  
- Using global $wp_tests_options	
+ # Using global $wp_tests_options	
  
  1. Adds your plugin to the array of 'active_plugins' in $GLOBALS['wp_tests_options']
  2. Load the wordpress-develop-tests bootstrap.php
@@ -60,7 +62,7 @@ bootstrap_loaded();
  This second method appears to have been deprecated, but I don't know when.
  
  
- Summary of methods used
+ # Summary of methods used by different plugins
   
  plugin           | method used						 | env var 						| plugin's tests dir		  | multisite?
  ---------        | ------------------		 | -------						| --------		  | --------- 
@@ -74,12 +76,23 @@ bootstrap_loaded();
  
  Note: WP-cli's PHPUnit testing is different
  
- Most unit test routines hard code the name of the plugin file to load
- But we can probably do better than that. 
- If we know the name of our bootstrap file then we can determine the plugin name from that
- on the assumption that the bootstrap file is in wp-content/plugins/$plugin/tests/bootstrap.php
+ # Preliminary thoughts on generalizing the solution
  
- @TODO Another way of invoking the tests would be to respond to an action hook invoked by wordpress-develop-tests
+ - Most unit test routines hard code the name of the plugin file to load
+ - But we can probably do better than that. 
+ - If we know the name of our bootstrap file then we can determine the plugin name from that; assumption is that the bootstrap file is in wp-content/plugins/$plugin/tests/bootstrap.php
+ - Another way of invoking the tests would be to respond to an action hook invoked by wordpress-develop-tests
+ 
+ # Requirements for in situ testing
+ 
+ All of the above discusses how plugins cater for running the tests in a vanilla environment.
+ But we want to run our tests in situ, which means our plugin is expected to be loaded already.
+ 
+ - Therefore we don't need to manually load the plugin.
+ - And we certainly don't want to actually run the bootstrap.
+ - You might wonder why we looked for it in the first place.
+ - So all we need to do is locate and load the files we need
+ 
  
 */
 function bootstrap_loaded() {
@@ -89,8 +102,8 @@ function bootstrap_loaded() {
 		//tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 		//continue_loading_bootstrap( $wordpress_develop_tests );
 	} else {
-		echo "What shall we do now then?";
-		die( "Tests cannot be run without WordPress develop test suite" );
+		echo "What shall we do now then?" . PHP_EOL;
+		die( "Tests cannot be run without the WordPress develop test suite." );
 	}
 }
 
@@ -123,14 +136,20 @@ function _manually_load_plugin() {
 
 /** 
  * Locate the wordpress-develop-tests code
+ * 
+ * We're trying to find the path to the wordpress-develop-tests plugin
+ * or the "tests\phpunit" directory within an extract from SVN or git.
  *
- * Support for:
- 
- * 1. wordpress-develop-tests installed as a plugin... will this work?
+ * Use these methods to locate the code:
+ * 
+ * 1. wordpress-develop-tests installed as a plugin.
  * 2. `WP_DEVELOP_DIR` environment variable - used by Jetpack
  * 3. `WP_TESTS_DIR` environment variable - used by CMB2
  * 4. Plugin installed inside of WordPress.org developer checkout
  * 5. Tests checked out to /tmp
+ * 
+ * If you have a normal WordPress install then the easiest way
+ * is to use the plugin approach. 
 	 `
    C:\svn
 			\wordpress-develop
@@ -138,34 +157,36 @@ function _manually_load_plugin() {
 					\wp-content
 						\plugins
 							\oik-batch - oik-wp.php
-								
+								\tests - bootstrap.php	
 							\$plugin
-								\tests - bootstrap.php
+								\tests - test-*.php
+								
+							\wordpress-develop-tests
+								same directory structure as \tests below
 				\tests
 					\phpunit
 						\build
 						\data
-						\includes - functions.php & boostrap.php
+						\includes - functions.php and other required files
 						\tests
 	`
-		
- * We're trying to find the path to the "tests\phpunit" directory
+ *	
  * 
- * Apologies for using Windows! 
+ * BTW: Apologies for using Windows backslashes
  * 
- * @return string the test\phpunit directory root
+ * @return string|null the directory root for the tests files
  */
 function locate_wordpress_develop_tests() {
 	$test_root = locate_wordpress_develop_tests_plugin();
 	if ( $test_root ) {
-		echo "Using WordPress-develop-tests plugin" . PHP_EOL;
+		echo "Using wordpress-develop-tests plugin" . PHP_EOL;
 	} elseif ( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
 		$test_root = getenv( 'WP_DEVELOP_DIR' );
 	} elseif ( false !== getenv( 'WP_TESTS_DIR' ) ) {
 		$test_root = getenv( 'WP_TESTS_DIR' );
-	} else if ( file_exists( '../../../../tests/phpunit/includes/bootstrap.php' ) ) {
+	} elseif ( file_exists( '../../../../tests/phpunit/includes/bootstrap.php' ) ) {
 		$test_root = '../../../../tests/phpunit';
-	} else if ( file_exists( '/tmp/wordpress-tests-lib/includes/bootstrap.php' ) ) {
+	} elseif ( file_exists( '/tmp/wordpress-tests-lib/includes/bootstrap.php' ) ) {
 		$test_root = '/tmp/wordpress-tests-lib'; 
 	} else {
 		echo "WordPress develop tests bootstrap.php not found" . PHP_EOL;
@@ -231,6 +252,7 @@ function continue_loading_bootstrap( $wordpress_develop_dir ) {
  * Load the WordPress develop tests functions.php file
  * 
  * Note: testcase.php loads the factory files
+ * 
  * 
  */
 function load_bootstrap_functions( $wordpress_develop_dir ) {

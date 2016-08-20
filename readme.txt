@@ -1,10 +1,10 @@
 === oik-batch ===
 Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
-Tags: batch, WordPress, CLI
+Tags: batch, WordPress, CLI, PHPUnit
 Requires at least: 4.4
-Tested up to: 4.5.2
-Stable tag: 0.8.5
+Tested up to: 4.6
+Stable tag: 0.8.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -13,8 +13,8 @@ Domain Path: /languages/
 == Description ==
 Batch interface to WordPress
 
-* oik-wp v0.0.1 - Batch WordPress 
-* oik-batch v0.8.3 - Batch interface to WordPress servers
+* oik-wp v0.0.2 - Batch WordPress
+* oik-batch v0.8.6 - Batch interface to WordPress servers
 * oik-git v0.8.4 - Simple Git status checker
 
 
@@ -25,6 +25,7 @@ oik-wp
 
 * Allows you to run WordPress from the command line
 * Connects to your chosen local WordPress environment
+* Support for running PHPUnit tests for WordPress plugins or themes in situ
 
 
 oik-batch
@@ -126,6 +127,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.8.6 = 
+oik-wp.php now supports running PHPUnit for WordPress plugins and themes in situ.
+
 = 0.8.5 = 
 Required for oik-locurl.php to partly localise an imported database
 
@@ -166,6 +170,12 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.8.6 = 
+* Added: Support for PHPUnit testing for WordPress plugins and themes in situ
+* Changed: Add comment for oik-git.php
+* Changed: Updated some version numbers
+* Changed: oik-locurl.php to report current value. Correct oikb_source_dir for 'wordpress' component in Linux
+
 = 0.8.5 = 
 * Added: Localisation of imported database. Partial solution for siteurl and home. [github bobbingwide oik-batch issues 8]
 * Changed: Accept path= paramter for WPMS [github bobbingwide oik-batch issue 6]

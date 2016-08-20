@@ -3,7 +3,7 @@
 Plugin Name: oik-wp
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-wp
 Description: standalone processing using a complete WordPress installation but not using WP-CLI 
-Version: 0.0.1
+Version: 0.0.2
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-wp

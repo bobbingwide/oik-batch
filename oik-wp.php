@@ -140,6 +140,16 @@ function oik_batch_start_wordpress() {
   require( $abspath . "wp-config.php" );
 	//require( $abspath . "wp-load.php" );
 	//require( $abspath .  "index.php" );
+	oik_batch_report_wordpress_version();
+}
+
+/**
+ * Report the version of WordPress
+ */
+function oik_batch_report_wordpress_version() {
+	global $wp_version;
+	printf( __( "oik-wp running WordPress %s", "oik-batch" ), $wp_version );
+	echo PHP_EOL;
 }
 
 /**
@@ -233,12 +243,12 @@ function oik_batch_load_wordpress_files() {
  *
  * Originally we loaded oik_boot.inc from the oik base plugin.
  * This is now a shared library file that we deliver in the libs folder, along with bwtrace.php
- * 
+ * We need to run oik_init() in order to ensure trace functions are available.
  */
 function oik_batch_load_oik_boot() {
   if ( !function_exists( "oik_init" ) ) {
     $oik_boot = "libs/oik_boot.php";
-    echo $oik_boot . PHP_EOL;
+    //echo $oik_boot . PHP_EOL;
     if ( file_exists( $oik_boot ) ) {
       require_once( $oik_boot );
     } else {
@@ -297,10 +307,11 @@ function oik_wp_loaded() {
 			oik_batch_start_wordpress();
 			
 			/*
-			 * The plugin may decide to run itself automatgically
+			 * The plugin may decide to run itself automagically
 			 * This code is probably all rubbish now!
 			 */
-			echo "I got here" . PHP_EOL;
+			//echo "I got here" . PHP_EOL;
+			//echo "oik-wp running WordPress 
 			echo getcwd() . PHP_EOL;
 			
 			oik_batch_debug();

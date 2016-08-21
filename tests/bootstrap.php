@@ -276,13 +276,34 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 	}
 }
 
+/**
+ * Locate the wordpress-develop-tests plugin
+ * 
+ * 
+ */
+
 function locate_wordpress_develop_tests_plugin() {
 	$tests_dir = null;
 	$file = oik_path( "phpunit/includes/functions.php", "wordpress-develop-tests" );
 	if ( file_exists( $file ) ) {
+		check_wordpress_develop_tests_version();
 		$tests_dir = oik_path( "phpunit", "wordpress-develop-tests" );
 	}
 	return( $tests_dir );
 }
 
+/**
+ * Check WordPress develop tests are compatible with WordPress installation
+ *
+ */
+function check_wordpress_develop_tests_version() {
+	require_once( ABSPATH . "wp-admin/includes/plugin.php" );
+	$plugin_file = oik_path( "wordpress-develop-tests.php", "wordpress-develop-tests" );
+	$plugin_data = get_plugin_data( $plugin_file, false, false );
+	$wordpress_develop_tests_version = bw_array_get( $plugin_data, 'Version', null );
+	global $wp_version;
+	if ( version_compare( $wp_version, $wordpress_develop_tests_version, "lt" ) ) {
+		echo "Warning: potentially incompatible versions: WordPress: $wp_version, wordpress-develop-tests: $wordpress_develop_tests_version" . PHP_EOL;
+	}
+}
 

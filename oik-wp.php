@@ -227,23 +227,22 @@ function oik_batch_load_wordpress_files() {
 }
 
 /**
- * Load the oik_boot.inc file from the oik base plugin
+ * Load the oik_boot.php shared library file
+ * 
+ * If the oik_init() function is not already defined then load the shared library file from our own libs directory.
  *
- * If the oik_init() function is not already defined
- * then load it from the oik directory relative to the current file
+ * Originally we loaded oik_boot.inc from the oik base plugin.
+ * This is now a shared library file that we deliver in the libs folder, along with bwtrace.php
  * 
  */
 function oik_batch_load_oik_boot() {
   if ( !function_exists( "oik_init" ) ) {
-    $dir = dirname( __FILE__ );
-    $parent_dir = dirname( $dir );
-    echo $parent_dir . PHP_EOL;
-    $oik_boot = "$parent_dir/oik/oik_boot.inc";
+    $oik_boot = "libs/oik_boot.php";
     echo $oik_boot . PHP_EOL;
     if ( file_exists( $oik_boot ) ) {
       require_once( $oik_boot );
     } else {
-      oik_batch_simulate_oik_boot(); 
+      echo "Missing shared library file: $oik_boot" . PHP_EOL;
     }
   }  
   if ( function_exists( "oik_init" ) ) {
@@ -285,9 +284,9 @@ function oik_wp_activation() {
  * Bootstrap logic for oik-wp
  * 
  * 
- * The checks if we're running as "CLI" - command line interface
+ * The checks if we're running as "CLI" -Command Line Interface
  * - If we are then we prepare the batch environment
- * - then, if this file is the first file then we run the routine specified on the command line.
+ * - then, if this file is the first file we run the routine specified on the command line.
  * 
  */
 function oik_wp_loaded() {

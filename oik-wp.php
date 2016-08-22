@@ -247,7 +247,11 @@ function oik_batch_load_wordpress_files() {
  */
 function oik_batch_load_oik_boot() {
   if ( !function_exists( "oik_init" ) ) {
-    $oik_boot = "libs/oik_boot.php";
+	
+    $dir = dirname( __FILE__ );
+    //$parent_dir = dirname( $dir );
+    //echo $parent_dir . PHP_EOL;
+    $oik_boot = "$dir/libs/oik_boot.php";
     //echo $oik_boot . PHP_EOL;
     if ( file_exists( $oik_boot ) ) {
       require_once( $oik_boot );
@@ -541,7 +545,6 @@ function oik_batch_query_nvp_value_from_argv( $argv, $key, $default ) {
  * 
  */
 function oik_batch_load_wordpress_develop_tests() {
-	//gob();
 	oik_require( "tests/bootstrap.php", "oik-batch" );
 }
 

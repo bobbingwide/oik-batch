@@ -28,86 +28,22 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
     http://www.gnu.org/licenses/gpl-2.0.html
 
 */
-oik_wp_loaded();
- 
-/**
- * Turn on debugging for oik-wp
- */ 
-function oik_batch_debug() {
-  if ( !defined( "WP_DEBUG" ) ) {
-    define( 'WP_DEBUG', true );
-  }  
-  error_reporting(E_ALL);
-  @ini_set('display_errors',1);
-}
 
 /**
- * Enable trace and action trace for oik-wp
- *
- * @TODO Make it so we can turn trace on and off Herb 2014/06/09 
+ * Load a library file
  */
-function oik_batch_trace( $trace_on=false ) {
-  if ( $trace_on ) {
-    if ( !defined( 'BW_TRACE_ON' )  ) {
-      define( 'BW_TRACE_CONFIG_STARTUP', true );
-      define( 'BW_TRACE_ON', true);
-      //define( 'BW_ACTIONS_ON', true );
-      define( 'BW_TRACE_RESET', false );
-      //define( 'BW_ACTIONS_RESET', false );
-    }  
-  } else {
-    // We don't do the defines so it can be done later.
-  } 
-}
-
-/**
- * Define the mandatory constants that allow WordPress to work
- * 
- * The logic to set ABSPATH was originally defined to allow the oik-wp to be used from one folder
- * while batch processing is working against other WordPress instances.
- * 
- * The current logic is to set the ABSPATH by working upwards from the current file.
- * This therefore requires oik-wp to be "installed" as a plugin with similar requirements to WP-CLI
- * 
- * In order to be able to run batch files against different instances of WordPress you will need to
- * use a "batch" routine that invokes the correct version of the required batch routine
- * while finding the appropriate version of the source.
- *  
- * @TODO This solution is not yet catered for. See oik_batch_define_oik_batch_dir()
- *
- * If not defined here then these constants will be defined in other source files such as default-constants.php 
- */
-function oik_batch_define_constants() {
-  if ( !defined('ABSPATH') ) {
-    /** Set up WordPress environment */
-    global $wp_did_header;
-    $abspath = __FILE__;
-    echo "Setting ABSPATH: $abspath" . PHP_EOL;
-    $abspath = dirname( dirname( dirname( dirname( $abspath ) ) ) );
-    $abspath .= "/"; 
-		$abspath = str_replace( "\\", "/", $abspath );
-    if ( ':' === substr( $abspath, 1, 1 ) ) {
-			$abspath = ucfirst( $abspath );
+if ( !function_exists( "oik_batch_load_lib" ) ) {
+	function oik_batch_load_lib( $lib ) {
+		$dir = dirname( __FILE__ );
+		$lib_file = "$dir/libs/$lib.php";
+		if ( file_exists( $lib_file ) ) {
+			require_once( $lib_file );
+		} else {
+			echo "Missing shared library file: $lib_file" . PHP_EOL;
 		}
-    echo "Setting ABSPATH: $abspath" . PHP_EOL;
-    define( "ABSPATH", $abspath );
-    define('WP_USE_THEMES', false);
-    $wp_did_header = true;
-    //require_once('../../..//wp-load.php');
-    
-    // We can't load bwtrace.inc until we know ABSPATH
-    //require_once( ABSPATH . 'wp-content/plugins/oik/bwtrace.inc' );
-    
-    define( 'WPINC', 'wp-includes' );
-    
-  	if ( !defined('WP_CONTENT_DIR') )
-  		define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' ); // no trailing slash, full paths only - copied from default-constants.php
-
-    if ( !defined('WPMU_PLUGIN_DIR') ) {
-      define( 'WPMU_PLUGIN_DIR', WP_CONTENT_DIR . '/mu-plugins' ); // full path, no trailing slash
-    }
-  }
+	}
 }
+ 
 
 /**
  * Start WordPress in the current directory
@@ -183,99 +119,7 @@ function oik_batch_locate_wp_config() {
 	return( $abspath );
 }
 
-/**
- * Set the OIK_BATCH_DIR constant
- *
- * If you want to run oik-wp against the current directory then
- * it would make sense to assume that the files come from within this directory somewhere
- * However, get_plugin_files() - return a list of files relative to the plugin's root uses WP_PLUGIN_DIR
- * which is set from ABSPATH.
- * If we try to set ABSPATH then we'll have to ensure that ALL of the plugins needed by the oik-wp routine are within the current directory.
- * This is not going to be the case.
- * SO... get_plugin_files() should not be used when OIK_BATCH_DIR is set differently from WP_PLUGIN_DIR
- * This change will also be necessary when we want to support themes.
- * 
- */  
-function oik_batch_define_oik_batch_dir() {
-  ///if ( !defined( 'OIK_BATCH_DIR' ) ) {
-  //  define( 'OIK_BATCH_DIR', getcwd() );
-  //}
-}
-  
-   
-/**
- * Simulate those parts of wp-settings.php that are required
- * 
- */
-function oik_batch_simulate_wp_settings() {
-  $GLOBALS['wp_plugin_paths'] = array();
-}
 
-/**
- * Batch WordPress without database
- *
- * Load the required WordPress include files for the task in hand.
- * These files are a subset of the full set of WordPress includes.
- * We may also need the oik-bwtrace plugin if there are any bw_trace2() calls temporarily inserted into the WordPress files for debugging purposes.
- *
- */
-function oik_batch_load_wordpress_files() {
-  // Load the L10n library.
-  require_once( ABSPATH . WPINC . '/l10n.php' ); // for get_translations_for_domain()
-  require_once( ABSPATH . WPINC . "/formatting.php" );
-  require_once( ABSPATH . WPINC . "/plugin.php" );
-  //require_once( ABSPATH . WPINC . "/option.php" );
-  require_once( ABSPATH . WPINC . "/functions.php" );
-  require( ABSPATH . WPINC . '/class-wp-error.php' );
-  
-  require_once( ABSPATH . WPINC . "/load.php" );
-  // Not sure if we need to load cache.php ourselves
-  // require_once( ABSPATH . WPINC . "/cache.php" );
-  require_once( ABSPATH . WPINC . "/version.php" );
-  require_once( ABSPATH . WPINC . "/post.php" ); // for add_post_type_support()
-  wp_load_translations_early();
-}
-
-/**
- * Load the oik_boot.php shared library file
- * 
- * If the oik_init() function is not already defined then load the shared library file from our own libs directory.
- *
- * Originally we loaded oik_boot.inc from the oik base plugin.
- * This is now a shared library file that we deliver in the libs folder, along with bwtrace.php
- * We need to run oik_init() in order to ensure trace functions are available.
- */
-function oik_batch_load_oik_boot() {
-  if ( !function_exists( "oik_init" ) ) {
-	
-    $dir = dirname( __FILE__ );
-    //$parent_dir = dirname( $dir );
-    //echo $parent_dir . PHP_EOL;
-    $oik_boot = "$dir/libs/oik_boot.php";
-    //echo $oik_boot . PHP_EOL;
-    if ( file_exists( $oik_boot ) ) {
-      require_once( $oik_boot );
-    } else {
-      echo "Missing shared library file: $oik_boot" . PHP_EOL;
-    }
-  }  
-  if ( function_exists( "oik_init" ) ) {
-    oik_init();
-  }
-}
-
-/**
- * Load Command Line Interface (CLI) functions
- *
- * Load some common routines that might be needed by
- * other routines designed to be run from the command line
- * 
- */
-function oik_batch_load_cli_functions() {
-	//$loaded = oik_require_lib( "oik-cli.php" );
-	oik_require( "libs/oik-cli.php", "oik-batch" );
-
-}
 
 /**
  * Implement "admin_notices" hook for oik-wp to check plugin dependency
@@ -300,14 +144,16 @@ function oik_wp_activation() {
  * 
  * The checks if we're running as "CLI" -Command Line Interface
  * - If we are then we prepare the batch environment
- * - then, if this file is the first file we run the routine specified on the command line.
+ * - then, if this file is the first file we run the routine specified on the command line
+ * - or, if it's being run under PHPUnit then we load the unit test environment for the tests that will follow
  * 
  */
 function oik_wp_loaded() {
 	if ( PHP_SAPI == "cli" ) {
 		if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
 			// This is WP-CLI, so we don't do anything.
-		} else {	
+		} else { 
+			oik_batch_load_lib( "oik-cli" );
 			oik_batch_start_wordpress();
 			
 			/*
@@ -321,11 +167,11 @@ function oik_wp_loaded() {
 			oik_batch_debug();
 			oik_batch_trace( true );
       
-			oik_batch_define_constants();
+			//oik_batch_define_constants();	 // @TODO Not necessary in oik-wp since WordPress has done all of this! 
 			oik_batch_load_oik_boot();
 			//oik_batch_simulate_wp_settings();
 			//oik_batch_load_wordpress_files();
-			oik_batch_load_cli_functions(); 
+			//oik_batch_load_cli_functions(); 
 			echo PHP_SAPI;
 			echo PHP_EOL;
 			$included_files = get_included_files();
@@ -598,3 +444,5 @@ function oik_batch_cd_drill_down( $path, $locate_file="wp-config.php" ) {
 }
 		
 
+
+oik_wp_loaded();

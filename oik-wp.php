@@ -43,7 +43,6 @@ if ( !function_exists( "oik_batch_load_lib" ) ) {
 		}
 	}
 }
- 
 
 /**
  * Start WordPress in the current directory
@@ -79,64 +78,6 @@ function oik_batch_start_wordpress() {
 	oik_batch_report_wordpress_version();
 }
 
-/**
- * Report the version of WordPress
- */
-function oik_batch_report_wordpress_version() {
-	global $wp_version;
-	printf( __( "oik-wp running WordPress %s", "oik-batch" ), $wp_version );
-	echo PHP_EOL;
-}
-
-/**
- * Locate the wp-config.php they expected to use
- *
- * __FILE__ may be a symlinked directory
- * but we need to work based on the current directory
- * so we work our way up the directory path until we find a wp-config.php
- * and treat that directory as abspath
- */
-
-function oik_batch_locate_wp_config() {
-	$owd = getcwd();
-	$abspath = null;
-	while ( $owd ) {
-		if ( file_exists( $owd . "/wp-config.php" ) ) { 
-			$abspath = $owd . '/';
-			$owd = null;
-		} else {
-			$next = dirname( $owd );
-			//echo "Checking $next after $owd" . PHP_EOL;
-			if ( $next == $owd ) {
-				$owd = null;
-			}	else {
-				$owd = $next;
-			}
-			
-		}
-	}
-	echo "wp-config in: $abspath" . PHP_EOL;
-	return( $abspath );
-}
-
-
-
-/**
- * Implement "admin_notices" hook for oik-wp to check plugin dependency
- * 
- */
-function oik_wp_activation() {
-  static $plugin_basename = null;
-  if ( !$plugin_basename ) {
-    $plugin_basename = plugin_basename(__FILE__);
-    add_action( "after_plugin_row_oik-wp/oik-wp.php", "oik_wp_activation" );
-    if ( !function_exists( "oik_plugin_lazy_activation" ) ) {   
-      require_once( "admin/oik-activation.php" );
-    }  
-  }  
-  $depends = "oik:2.4";
-  oik_plugin_lazy_activation( __FILE__, $depends, "oik_plugin_plugin_inactive" );
-}
 
 /**
  * Bootstrap logic for oik-wp
@@ -195,77 +136,14 @@ function oik_wp_loaded() {
 		}
 		if ( function_exists( "add_action" ) ) {
 			// if ( bw_is_wordpress() ) {
+			
+			oik_batch_load_lib( "oik-cli" );
+			oik_batch_load_oik_boot();
 			add_action( "admin_notices", "oik_batch_activation" );
 			add_action( "oik_admin_menu", "oik_batch_admin_menu" );
 			//add_action( "@TODO load shared libraries?
 		} 
 	}
-}
-
-/**
- * Run a script in batch
- *
- * @TODO Check these comments
- * If the file name given is in the form of a plugin file name e.g. plugin/plugin.php
- * then we can invoke it using oik_path() 
- * If it's just a simple name then we assume it's in the ??? folder and we need to append .php 
- * and invoke it using oik_path()
- * If it's a fully specified file name that exists then we call it directly.
- *
- * The script can be run by simply loading the file
- * and/or it can implement an action hook for "run_$script"
- *
- * @param string $script the file to load and run
- *
- */
-//if ( !function_exists( "oik_batch_run_script" ) ) { 
-function oik_batch_run_script( $script ) {
-  if ( file_exists( $script ) ) {
-		oik_require( "oik-login.inc", "oik-batch" );
-    require_once( $script ); 
-		echo "Script required once: $script" . PHP_EOL;
-		do_action( "run_$script" );
-		echo "Did: run_$script" . PHP_EOL;
-  } else {
-    $script_parts = pathinfo( $script );
-    print_r( $script_parts );
-    $dirname = bw_array_get( $script_parts, "dirname", null );
-    if ( $dirname == "." ) {
-      $dirname = "oik-wp"; // @TODO - make it choose the current directory
-    } 
-    $filename = bw_array_get( $script_parts, "filename", null );
-    $extension = bw_array_get( $script_parts, "extension", ".php" );
-    
-       
-    $required_file = WP_PLUGIN_DIR . "/$dirname/$filename$extension";
-    echo $required_file . PHP_EOL;
-    if ( file_exists( $required_file ) ) {
-      require_once( $required_file );
-    } else {
-      echo "Cannot find script to run: $required_file" . PHP_EOL;
-    }  
-  }
-}
-//}
-
-/**
- * Run the script specified having pre-loaded wp-batch code
- *
- * Before loading the script we shift the args so that it thinks it's been invoked directly
- *
- * We will assume that a partial path to the routine to be run ($server) has been specified
- */
-function oik_batch_run() {
-  if ( $_SERVER['argc'] >=2  ) {
-    $script = $_SERVER['argv'][1]; 
-    //print_r( $_SERVER['argv'] );
-    array_shift( $_SERVER['argv'] );
-		echo "Shifting argv" . PHP_EOL;
-    //print_r( $_SERVER['argv'] );
-    $_SERVER['argc']--;
-    //print_r( $_SERVER['argc'] );
-    oik_batch_run_script( $script );
-  }   
 }
 
 

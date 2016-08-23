@@ -158,15 +158,6 @@ function oik_batch_loaded() {
 }
 
 /**
- * Implement "oik_admin_menu" action for oik-batch
- *
- * Register the plugin as being supported from an oik-plugins server  
- */
-function oik_batch_admin_menu() {
-  oik_register_plugin_server( __FILE__ );
-}
-
-/**
  *
  *
  * If the file name given is in the form of a plugin file name e.g. plugin/plugin.php

@@ -99,9 +99,18 @@ function oik_normalize_path( $path ) {
 		$path = ucfirst( $path );
 	}
 	return( $path );
-}		
+}
 
-
+/**
+ * Report the version of WordPress
+ * 
+ * We may not be able to do this in oik-batch
+ */
+function oik_batch_report_wordpress_version() {
+	global $wp_version;
+	printf( __( "oik-wp running WordPress %s", "oik-batch" ), $wp_version );
+	echo PHP_EOL;
+}
 
 /**
  * Prompt to check if the process should be continued
@@ -305,6 +314,35 @@ function oik_batch_trace( $trace_on=false ) {
 function oik_batch_admin_menu() {
 	
   oik_register_plugin_server( __FILE__ );
+}
+
+/**
+ * Implement "admin_notices" hook for oik-wp and oik-batch to check plugin dependency
+ *
+ * Note: createapi2 and listapis2 are dependent upon oik-shortcodes, BUT oik-batch itself is not.
+ * Not yet... Anyway createapi2 and listapis2 should be moved to oik-shortcodes.
+ * BUT oik-batch/oik-wp.php may have a user interface for defining / redefining the initial status for PHPUnit tests
+ * so it's probably dependent upon oik v3.0 
+ * 
+ */
+function oik_batch_activation() {
+  static $plugin_basename = null;
+  if ( !$plugin_basename ) {
+    $plugin_basename = plugin_basename(__FILE__);
+    add_action( "after_plugin_row_oik-batch/oik-batch.php", "oik_batch_activation" );
+		add_action( "after_plugin_row_oik-batch/oik-wp.php", "oik_batch_activation" );
+    if ( !function_exists( "oik_plugin_lazy_activation" ) ) { 
+      oik_require( "admin/oik-activation.php", "oik-batch" );
+    }  
+  }  
+  $depends = "oik:3.0";
+	// We have to tell the lazy activation routine the correct plugin; oik-batch or oik-wp ? 
+	// So don't do it for admin_notices only the after_plugin_row ones
+	$current_filter = current_filter();
+	if ( "admin_notices" != $current_filter ) {
+		$plugin = basename(  $current_filter );
+		oik_plugin_lazy_activation( $plugin, $depends, "oik_plugin_plugin_inactive" );
+	}
 }
 
 /**

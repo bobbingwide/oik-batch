@@ -3,7 +3,7 @@
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.8.6
+Version: 0.8.7
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2
@@ -29,6 +29,7 @@ License: GPL2
 /**
  * Load a library file
  * 
+ * @param string $lib - the library file name e.g. oik-cli
  */
 if ( !function_exists( "oik_batch_load_lib" ) ) {
 	function oik_batch_load_lib( $lib ) {
@@ -41,7 +42,6 @@ if ( !function_exists( "oik_batch_load_lib" ) ) {
 		}
 	}
 }
- 
 
 /**
  * Bootstrap logic for oik-batch
@@ -60,7 +60,6 @@ function oik_batch_loaded() {
 			oik_batch_load_lib( "oik-cli" );
 			oik_batch_debug();
 			oik_batch_trace( true );
-			//oik_batch_locate_wp_config();
 			oik_batch_define_constants();
 			oik_batch_load_oik_boot();
 			oik_batch_simulate_wp_settings();
@@ -68,12 +67,11 @@ function oik_batch_loaded() {
 			echo PHP_SAPI;
 			echo PHP_EOL;
 			
-			// oik_batch_report_wordpress_version();	// @TODO Is this useful? 
 			$included_files = get_included_files();
 			if ( $included_files[0] == __FILE__) {
 				oik_batch_run();
 			}// else {
-				// wp-batch has been loaded by another PHP routine so that routine is in charge. e.g. boot-fs.php for WP-CLI
+				// wp-batch has been loaded by another PHP routine so that routine is in charge.
 				// }
 			echo "End cli:" . __FUNCTION__ . PHP_EOL; 
 		}

@@ -11,6 +11,8 @@
  
 /**
  * Load a library file
+ * 
+ * @param string $lib - the library file name e.g. oik-cli
  */
 if ( !function_exists( "oik_batch_load_lib" ) ) {
 	function oik_batch_load_lib( $lib ) {
@@ -43,6 +45,27 @@ function oik_batch_load_oik_boot() {
 }
 
 /**
+ * Locate the expected wp-config.php when running under PHPUnit
+ * 
+ * When being run under PHPUnit in Windows environments with symlinked directories we can't simply reset the current working directory
+ * as this can lead us to the wrong wp-config.php. So we need to work downwards to the directory saved in the PRE_PHPUNIT_CD environment variable.
+ *
+ * For more information see notes in https://github.com/bobbingwide/oik-batch/issues/9
+ */
+function oik_batch_locate_wp_config_for_phpunit() {
+	$abspath = null;
+	if ( false !== strpos( $_SERVER['argv'][0], "phpunit" ) ) {
+		$pre_phpunit_cd = getenv( "PRE_PHPUNIT_CD" );
+		if ( $pre_phpunit_cd ) {
+			echo "Searching for wp-config.php in directories leading to: $pre_phpunit_cd" . PHP_EOL;
+			$abspath = oik_batch_cd_drill_down( $pre_phpunit_cd );
+		}
+	}
+	return( $abspath );
+}
+
+
+/**
  * Locate the wp-config.php they expected to use
  *
  * __FILE__ may be a symlinked directory
@@ -54,9 +77,8 @@ function oik_batch_load_oik_boot() {
  * as we see in the comment in wp-config.php 
  * `Absolute path to the WordPress directory.`
  * 
- * 
- * What if we move wp-config.php to the directory above?
- * then we have to set ABSPATH differently?
+ * @TODO What if we move wp-config.php to the directory above?
+ * Do we have to set ABSPATH differently? A. It depends on the presence of wp-settings.php in that folder.
  * 
  * @return string the normalized path to the wp-config.php file
  */
@@ -99,6 +121,166 @@ function oik_normalize_path( $path ) {
 		$path = ucfirst( $path );
 	}
 	return( $path );
+}
+
+/**
+ * Drill down to locate the lowest file
+ * 
+ * In Windows, when you're using symlinks and PHP's chdir() the resulting directory reported by getcwd()
+ * reflects the real directory. This might not be the one you first thought of.
+ * It makes finding files a little tricky, hence the need for this function.
+ *
+ * @param string $path the ending directory
+ * @param string $locate_file the file we're looking for
+ * @return string|null the lowest directory or null
+ */
+function oik_batch_cd_drill_down( $path, $locate_file="wp-config.php" ) {
+	$abspath = null;
+	$path = str_replace( "\\", "/", $path );
+  $paths = explode( "/", $path );
+	foreach ( $paths as $cd ) {
+		$success = chdir( $cd );
+		if ( $success ) {
+			$now = getcwd();
+			//echo "$cd got me here $now" . PHP_EOL;
+			if ( file_exists( $locate_file ) ) {
+				$abspath = $now;
+				$abspath .= '/';
+				echo "Found $locate_file in: $abspath" . PHP_EOL;
+			}
+		} else {
+			echo "Error performing chdir to $cd" . PHP_EOL;
+		}
+	}
+	return( $abspath );
+}
+		
+
+/**
+ * WordPress MultiSite needs to know which domain we're working on
+ * 
+ * We extract it from $_SERVER['argv'] array, looking for url=domain/path
+ *
+ * We need to know the URL e.g. qw/oikcom or wp-a2z in order to be able to set both HTTP_HOST and REQUEST_URI
+ *
+ * For WPMS with a subdirectory install we need to be able to differentiate between the directory in which WordPress is installed
+ * 
+ * and the directory for the subdomain
+ * So we'll need a value for path too?
+ * 
+ * 
+ * 
+ * 
+ * @param string $abspath
+ */
+function oik_batch_set_domain( $abspath ) {
+	$domain = oik_batch_query_value_from_argv();
+	echo "Domain: $domain" . PHP_EOL;
+	
+	if ( !isset( $_SERVER['HTTP_HOST']) ) {
+		//print_r( $_SERVER );
+		$_SERVER['HTTP_HOST'] = $domain;
+	}
+	
+	if ( !isset( $_SERVER['REQUEST_URI'] ) ) {
+		$_SERVER['REQUEST_URI'] = "/";
+	}	
+	
+	if ( !isset( $_SERVER['SERVER_NAME'] ) ) {
+		$_SERVER['SERVER_NAME'] = $domain;
+		$_SERVER['SERVER_PORT'] = "80";
+	}
+
+// $_SERVER['REQUEST_URI'] = $f('path') . ( isset( $url_parts['query'] ) ? '?' . $url_parts['query'] : '' );
+// $_SERVER['SERVER_PORT'] = \WP_CLI\Utils\get_flag_value( $url_parts, 'port', '80' );
+// $_SERVER['QUERY_STRING'] = $f('query');
+}
+
+/**
+ * Set the path for WPMS
+ */
+function oik_batch_set_path() {
+	$path = oik_batch_query_value_from_argv( "path", null );
+	if ( $path ) {
+		$_SERVER['REQUEST_URI'] = $path;
+	}
+}
+
+/**
+ * Obtain a value for a command line parameter
+ *
+ * If the required parameter key is numeric then we take the positional parameter
+ * else we take value of an NVP pair.
+ *
+ * This is a simple hack that's not as advanced as WP-CLI, which allows `--no-` prefixes to set parameters to false
+ * Here we're really only interested in getting `url=`
+ *
+ * @param string $key Not expected to be prefixed with --
+ * @param string $default Default value if not found
+ * @return string value of the parameter
+ */
+function oik_batch_query_value_from_argv( $key="url", $default="localhost" ) {
+	$argv = $_SERVER['argv'];
+	$value = $default;
+	if ( $_SERVER['argc'] ) {
+		if ( is_numeric( $key ) ) {
+			$value = oik_batch_query_positional_value_from_argv( $_SERVER['argv'], $key, $default );
+		} else {
+			$value = oik_batch_query_nvp_value_from_argv( $_SERVER['argv'], $key, $default );
+		}
+	}	
+	return( $value );
+}
+
+/**
+ * Query a positional parameter
+ *
+ * We start counting from 0 - which allows us to get the routine name
+ * 
+ * @param array $argv 
+ * @param integer $index
+ * @param string $default 
+ * @return string the parameter value. Note the passsed default value may be null
+ */
+function oik_batch_query_positional_value_from_argv( $argv, $index, $default ) {
+	$arg_index = 0;
+	$value = $default;
+	foreach ( $argv as $key => $arg_value ) {
+		if ( false === strpos( $arg_value, "=" ) ) {
+			if ( $arg_index == $index ) {
+				$value = $arg_value;
+			}
+			$arg_index++;
+		}
+			
+	}
+	return( $value );
+}
+
+/**
+ * Query a named parameter's value
+ * 
+ * Format of parameters in name value pairs separated by an '='. e.g. url=example.com
+ * 
+ * Allow for case insensitive parameter names
+ * 
+ * @param array $argv 
+ * @param string $key
+ * @param string $default 
+ * @return string the parameter value. Note the passsed default value may be null
+ */
+function oik_batch_query_nvp_value_from_argv( $argv, $key, $default ) {
+	$value = $default;
+	foreach ( $argv as $arg_value ) {
+		if ( false !== strpos( $arg_value, "=" ) ) {
+			$arg_value = strtolower( $arg_value );
+			$arg_parts = explode( "=", $arg_value );
+			if ( count( $arg_parts ) == 2 && $arg_parts[0] == $key ) {
+				$value = $arg_parts[1];
+			}
+		}
+	}
+	return( $value );
 }
 
 /**

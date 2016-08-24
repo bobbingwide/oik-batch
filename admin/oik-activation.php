@@ -1,27 +1,15 @@
 <?php // (C) Copyright Bobbing Wide 2012-2016
 
-/**
- * Dependency checking logic for WordPress plugins and themes
- * 
- * This logic has been converted to a shared library in libs/oik-activation.php
- * It is required for plugins which have dependencies but the dependency checking
- * has not already been provided by a plugin which delivers the shared library. 
- *
- * @TODO Remove the redundant code
- */
-
 if ( function_exists( "oik_plugin_lazy_activation" ) ) {
-	// It's already defined so we don't need this lot
+ // It's already defined so we don't need this lot
 } else { 
-	bw_trace2( __FILE__, "doing_it_wrong", false, BW_TRACE_ERROR );
-	_doing_it_wrong( __FILE__, "Use libs/oik-activation.php", "oik v3.0.0" );
-}
 
 /** 
  * Produce an install plugin link
  *
- * @param string $plugin
- * @return string the install plugin link
+ * @param string $plugin plugin slug
+ * 
+ * @return string link for the plugin install
  */
 function oik_plugin_install_plugin( $plugin ) {
   $path = "update.php?action=install-plugin&plugin=$plugin";
@@ -65,7 +53,7 @@ function oik_plugin_activate_plugin( $plugin, $plugin_name) {
 } 
  
 /**
- * Create an Upgrade plugin link
+ * Create an Update plugin link
  *
  * Decided to use "Update" rather than " Upgrade". 
  *
@@ -128,6 +116,7 @@ function oik_plugin_check_installed_plugin( $plugin ) {
   }
   return( $plugin_to_activate );
 }
+
 
 /**
  * Test if the plugin is activated
@@ -236,3 +225,37 @@ function oik_plugin_lazy_activation( $plugin=null, $dependencies=null, $callback
     call_user_func( $callback, $plugin, $dependencies, "missing" );
   }   
 }
+
+
+/**
+ * Simple implementation of plugin dependency logic
+ *
+ * @param string $plugin - the plugin file name
+ * @param string $dependencies - the list of plugins upon which this plugin is dependent
+ * @param string $callback - the callback function to invoke when the dependencies aren't satisfied
+ *
+ * Instead of calling this module during activation we invoke it in response to the 
+ * after_plugin_row_$plugin_basename action.
+ * 
+ * This gives us a bit more control over the information we provide.
+ * IF the oik plugin is not activated then oik_lazy_depends() will not be defined
+ * 
+ */
+if ( !function_exists( "oik_depends" ) ) {
+function oik_depends( $plugin=null, $dependencies="oik", $callback=null ) {
+  //bw_trace2();
+  //if ( function_exists( "oik_load_plugins" )) {
+  //  oik_load_plugins();
+  //}  
+  if ( function_exists( "oik_lazy_depends" ) ) {  
+    oik_lazy_depends( $plugin, $dependencies, $callback );
+  } else {
+    if ( is_callable( $callback ) ) {
+      call_user_func( $callback, $plugin, $dependencies, "missing" );
+    }  
+  }  
+}
+}
+
+
+} // end else 

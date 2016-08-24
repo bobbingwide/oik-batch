@@ -5,7 +5,7 @@
 * Tags: batch, WordPress, CLI, PHPUnit
 * Requires at least: 4.4
 * Tested up to: 4.6
-* Stable tag: 0.8.6
+* Stable tag: 0.8.7
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: oik-batch
@@ -14,8 +14,8 @@
 ## Description 
 Batch interface to WordPress
 
-* oik-wp v0.0.2 - Batch WordPress
-* oik-batch v0.8.6 - Batch interface to WordPress servers
+* oik-wp v0.0.3 - Batch WordPress - standalone processing using a complete WordPress installation but not using WP-CLI
+* oik-batch v0.8.7 - Batch interface to WordPress servers
 * oik-git v0.8.4 - Simple Git status checker
 
 
@@ -26,7 +26,7 @@ oik-wp
 
 * Allows you to run WordPress from the command line
 * Connects to your chosen local WordPress environment
-* Support for running PHPUnit tests for WordPress plugins or themes in situ
+* Supports running PHPUnit tests for WordPress plugins or themes in situ
 
 
 oik-batch
@@ -34,7 +34,6 @@ oik-batch
 * Allows you to run parts of WordPress in batch mode
 * No connection to the database
 
-* Run under oik-batch
 
 
 ## Installation 
@@ -69,9 +68,14 @@ Under development:
 
 # What are the dependencies? 
 
-oik-batch is still dependent upon the oik base plugin's files if oik, oik-lib nor oik-bwtrace is not loaded.
+oik-batch.php and oik-wp.php
 
-For listing and defining the APIs implemented by a WordPress plugin, or WordPress itself you will need the following:
+As of v0.8.7 oik-batch is no longer dependent upon the oik base plugin's files for batch processing.
+
+If you activate either oik-batch or oik-wp then it will report a dependency on the oik base plugin.
+
+For other routines, such as createapi2.php, which is used for listing and defining the APIs implemented by a WordPress plugin, theme or WordPress core itself,
+you will need the following:
 
 * oik-shortcodes plugin
 * oik-plugins plugin
@@ -83,7 +87,24 @@ For listing and defining the APIs implemented by a WordPress plugin, or WordPres
 
 # How do I invoke the routines? 
 
-Create a batch file for each of the main routine
+Create a batch file for each of the main routines
+
+oikwp.bat for invoking oik-wp.php
+
+`
+rem Run oik-wp in batch mode so that you can test some code outwith the browser
+php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-wp.php %*
+`
+
+Run the routine from the required installation's folder where the php file exists.
+This allows oik-wp to determine the correct wp-config file to use. eg
+
+`
+cd \apache\htdocs\oikcom\wp-content\plugins\oik-shortcodes
+oikwp
+`
+
+
 
 batch.bat for invoking oik-batch.php
 
@@ -96,17 +117,6 @@ e.g. To invoke listapis2 use:
 `
 batch listapis2 <i>plugin</i>
 `
-
-oikwp.bat for invoking oik-wp.php
-
-`
-rem Run oik-wp in batch mode so that you can test some code outwith the browser
-php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-wp.php %*
-`
-
-Run the routine from the required installation's folder where the php file exists.
-This allows oik-wp to determine the correct wp-config file to use.
-
 
 
 Alternatively oik-batch.php can be included in the main routine.
@@ -128,6 +138,9 @@ The following files are deprecated and will no longer be released
 1. oik-batch in action performing createapi2.php
 
 ## Upgrade Notice 
+# 0.8.7 
+No longer dependent upon the oik base plugin. Tested with WordPress 4.6 and PHPUnit 5.5.2.
+
 # 0.8.6 
 oik-wp.php now supports running PHPUnit for WordPress plugins and themes in situ.
 
@@ -171,6 +184,13 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 ## Changelog 
+# 0.8.7 
+* Changed: Remove dependency on oik or oik-bwtrace [github bobbingwide oik-batch issue 10]
+* Changed: Improve admin notices when oik-batch or oik-wp have been activated as plugins
+* Changed: Load the bootstrap from oik-batch as a relative directory, allowing easy re-use of phpunit.xml.dist
+* Changed: Display WordPress version and warning message if wordpress-develop-tests version doesn't match
+* Tested: With WordPress 4.6 and PHPUnit 5.5.2
+
 # 0.8.6 
 * Added: Support for PHPUnit testing for WordPress plugins and themes in situ
 * Changed: Add comment for oik-git.php

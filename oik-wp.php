@@ -86,7 +86,7 @@ function oik_batch_start_wordpress() {
  */
 function oik_wp_loaded() {
 	if ( PHP_SAPI == "cli" ) {
-		if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
+		if ( basename( $_SERVER['argv'][0] ) == "boot-fs.php" )   {
 			// This is WP-CLI, so we don't do anything.
 		} else { 
 			oik_batch_load_lib( "oik-cli" );

@@ -2,7 +2,7 @@
 /**
  * @group oik-batch
  */
-class Tests_oik_wp_batch_share_libraries extends WP_UnitTestCase {
+class Tests_oik_wp_batch_share_libraries extends BW_UnitTestCase {
 
 	/**
 	 * Test that oik-batch and oik-wp can peacefully coexist,

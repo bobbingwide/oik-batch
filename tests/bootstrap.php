@@ -10,15 +10,13 @@
  * and finding the bootstrap parameter in the main tag
  * `<phpunit bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true">`
  *
- * With oik-batch the bootstrap if different. 
+ * With oik-batch the bootstrap is different. 
  * Instead of loading tests/bootstrap.php we load ../oik-batch/oik-wp.php 
  * using `phpunit --bootstrap=../oik-batch/oik-wp.php`
  * or `<phpunit bootstrap="../oik-batch/oik-wp.php" >`
  * 
- * oik-wp will instantiate WordPress, with all the active plugins and themes
+ * oik-wp will instantiate WordPress, with all the active plugins and themes,
  * and without resetting the database.
- 
- * @TODO Actually, it should reset the database to a defined checkpoint.
  *
  *
  * The bootstrap file for wordpress-develop-tests does a lot of things including resetting the database.
@@ -31,7 +29,12 @@
  * - How easy is this to do?
  * - What problems does this introduce with regards to using existing test data?
  * - i.e. Is this a silly thing to do?
- * - Can we run phpunit under WordPress or must phpunit be in charge
+ * - Can we run phpunit under WordPress or must phpunit be in charge?
+ * 
+ 
+ * @TODO Rather than resetting the database to a defined checkpoint ( original idea August 2016 )
+ * we need to ensure that WP_UnitTestCase does not do anything silly with the database.
+ * We do this by implementing our own instance of WP_UnitTestCase.
  * 
  * 
  */
@@ -249,11 +252,20 @@ function continue_loading_bootstrap( $wordpress_develop_dir ) {
 }
 
 /**
- * Load the WordPress develop tests functions.php file
+ * Load the WordPress develop tests functions.php file or our oik-batch replacements for in situ 
+ *
+ * File | Loaded from | Notes
+ * ---- | ------------ | -----------------
+ * factory.php | WP | this loads a load of factory classes
+ * class-basic-object.php | - | 
+ * class-basic-subclass.php | - | 
+ * functions.php | oik-batch | a limited subset
+ * trac.php | - | Not required for in situ testing of plugins & themes
+ * testcase.php | oik-batch | WP_UnitTestCase overridden for in situ testing
+ * test-bw-unittestcase.php | oik-batch | BW_UnitTestCase extends WP_UnitTestCase for any extra methods we think'll come in handy
+ * etc | WP | Not sure about the rest!  
  * 
- * Note: testcase.php loads the factory files
- * 
- * 
+ * @param string $wordpress_develop_dir - the location of the WordPress PHPUnit test case code
  */
 function load_bootstrap_functions( $wordpress_develop_dir ) {
 	if ( $wordpress_develop_dir ) {
@@ -262,8 +274,13 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		if ( ! defined( 'WP_TESTS_FORCE_KNOWN_BUGS' ) ) {
 			define( 'WP_TESTS_FORCE_KNOWN_BUGS', false );
 		}
-		require $wordpress_develop_dir . '/includes/functions.php';
-    require $wordpress_develop_dir . '/includes/testcase.php';
+		//require $wordpress_develop_dir . '/includes/functions.php';
+		oik_require( "tests/functions.php", "oik-batch" );
+		//require_once dirname( __FILE__ ) . '/trac.php';
+    //require $wordpress_develop_dir . '/includes/testcase.php';
+		require $wordpress_develop_dir . '/includes/factory.php'; 
+		oik_require( "tests/testcase.php", "oik-batch" );
+		oik_require( "tests/class-bw-unittestcase.php", "oik-batch" );
 		require $wordpress_develop_dir . '/includes/testcase-rest-api.php';
 		require $wordpress_develop_dir . '/includes/testcase-xmlrpc.php';
 		require $wordpress_develop_dir . '/includes/testcase-ajax.php';

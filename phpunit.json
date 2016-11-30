@@ -15,7 +15,7 @@
     "suite": "Tests_oik_wp_batch_share_libraries",
     "test": "Tests_oik_wp_batch_share_libraries::test_loading_oik_batch",
     "status": "pass",
-    "time": 1.6858510971069,
+    "time": 0.1792950630188,
     "trace": [],
     "message": "",
     "output": ""
@@ -32,7 +32,7 @@
     "suite": "UnitTest",
     "test": "UnitTest::test_case",
     "status": "pass",
-    "time": 0.00015902519226074,
+    "time": 0.00019001960754395,
     "trace": [],
     "message": "",
     "output": ""
@@ -45,7 +45,7 @@
     "suite": "UnitTest",
     "test": "UnitTest::test_oik_path_available",
     "status": "pass",
-    "time": 0.00012588500976562,
+    "time": 0.00011706352233887,
     "trace": [],
     "message": "",
     "output": ""
@@ -62,7 +62,7 @@
     "suite": "Tests_WordPress",
     "test": "Tests_WordPress::test_get_post_meta_function_exists",
     "status": "pass",
-    "time": 0.00018000602722168,
+    "time": 0.00021004676818848,
     "trace": [],
     "message": "",
     "output": ""
@@ -75,7 +75,7 @@
     "suite": "Tests_WordPress",
     "test": "Tests_WordPress::test_factory_methods_available",
     "status": "pass",
-    "time": 0.47314190864563,
+    "time": 0.15300393104553,
     "trace": [],
     "message": "",
     "output": ""

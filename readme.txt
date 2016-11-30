@@ -3,8 +3,8 @@ Contributors: bobbingwide,vsgloik
 Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI, PHPUnit
 Requires at least: 4.4
-Tested up to: 4.6
-Stable tag: 0.8.7
+Tested up to: 4.7
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -19,12 +19,9 @@ Batch interface to WordPress
 
 Components
 
-* oik-wp v0.0.3 - Batch WordPress - standalone processing using a complete WordPress installation but not using WP-CLI
-* oik-batch v0.8.7 - Batch interface to WordPress servers
-
-Sub-components 
-
-* oik-git v0.8.4 - Simple Git status checker
+* oik-wp - Batch WordPress - standalone processing using a complete WordPress installation but not using WP-CLI
+* oik-batch - Batch interface to WordPress servers
+* Sub-component: oik-git - Simple Git status checker
 
 oik-wp
 
@@ -41,7 +38,9 @@ oik-batch
 * Performs bootstrap logic preparing a [wp] client environment.
 * Supports direct invocation of batch processes.
 
-Sub component: oik-git.php
+Sub component: oik-git
+
+* Run under oik-batch, checks the status of Git repositories 
 
 
 == Installation ==
@@ -117,6 +116,9 @@ php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plu
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.9.0 = 
+Tested with WordPress 4.7. Upgrade to this version to perform In situ PHPUnit tests of WordPress plugins and themes.
+
 = 0.8.7 = 
 No longer dependent upon the oik base plugin. Tested with WordPress 4.6 and PHPUnit 5.5.2.
 
@@ -163,6 +165,12 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.9.0 =
+* Fixed: Versions of oik-wp and oik-batch must match latest level [github bobbingwide oik-batch issues 13]
+* Changed: Improve support for PHPUnit testing plugins in situ [github bobbingwide oik-batch issues 11]
+* Tested: With WordPress 4.7 
+ 
+
 = 0.8.7 = 
 * Changed: Remove dependency on oik or oik-bwtrace [github bobbingwide oik-batch issue 10]
 * Changed: Improve admin notices when oik-batch or oik-wp have been activated as plugins

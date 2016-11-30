@@ -253,7 +253,8 @@ class Git {
 					echo "$file is a directory" . PHP_EOL;
 					$source = $this->is_git( $directory . "/" . $file );
 					if ( $source ) {
-						echo "git clone https://github.com/bobbingwide/$file" . PHP_EOL;
+						// Can't quite remember what this next line's purpose was.
+						//echo "git clone https://github.com/bobbingwide/$file" . PHP_EOL;
 						chdir( $source );
 						$result = $this->command( "status", null );
 						echo $result;

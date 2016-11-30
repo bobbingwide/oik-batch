@@ -1,9 +1,9 @@
 <?php // (C) Copyright Bobbing Wide 2013-2016
 /*
 Plugin Name: oik-wp
-Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-wp
+Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a complete WordPress installation but not using WP-CLI 
-Version: 0.0.3
+Version: 0.9.0
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-wp

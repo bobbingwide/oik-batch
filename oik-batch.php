@@ -3,7 +3,7 @@
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.8.7
+Version: 0.9.0
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2

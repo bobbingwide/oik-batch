@@ -76,7 +76,9 @@ class OIK_sqldump {
 		return( $this->target_dir );
 	}
 	
-	
+	/**
+	 * Perform a mysqldump
+	 */
 	function sqldump() {
 		$cmd = sprintf( "mysqldump -h %s -u %s --password=%s %s --result_file=%s", $this->db_host, $this->db_user, $this->db_password, $this->db_name, $this->dumpfile	);
 
@@ -96,7 +98,6 @@ class OIK_sqldump {
 	 * 
 	 * @return bool - true if the dump file does not already exist or it does but it's empty, false if we're happy.
 	 */
-	
 	function dump_required() {
 		$dump_exists = file_exists( $this->dumpfile );
 		if ( $dump_exists ) {
@@ -106,7 +107,6 @@ class OIK_sqldump {
 				$dump_exists = false;
 			}
 		}
-			
 		return( !$dump_exists );
 	}
 	
@@ -118,6 +118,27 @@ class OIK_sqldump {
 	function perform_backup() {
 		$this->sqldump();
 		$this->checkdumpfile();
+	}
+	
+	/**
+	 * Check the dump file
+	 * 
+	 * - Check the dump file exists 
+	 * - Check iit's a reasonable file size
+	 * - @TODO Check it contains some SQL statements that can be used to build a database
+	 */
+	function checkdumpfile() {
+		if ( $this->dump_required() ) {
+			echo "Well that didn't work!" . PHP_EOL;
+		} else {
+			$filesize = filesize( $this->dumpfile );
+			if ( $filesize < 1000 ) {
+				echo "Need to check the dump file: " . $this->dumpfile . PHP_EOL;	
+				echo "It's a bit small: " . $filesize . PHP_EOL;
+			}	else {
+				echo "Still need to check it'll 'CREATE TABLE's" . PHP_EOL;
+			}
+		}	
 	}
 
 }

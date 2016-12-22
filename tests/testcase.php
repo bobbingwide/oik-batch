@@ -122,7 +122,7 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 	 */
 	function tearDown() {
 		global $wpdb, $wp_query, $wp;
-		$wpdb->query( 'ROLLBACK' );
+		$wpdb->query( 'ROLLBACK;');
 		if ( is_multisite() ) {
 			while ( ms_is_switched() ) {
 				restore_current_blog();
@@ -259,7 +259,7 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 
 	function start_transaction() {
 		global $wpdb;
-		$wpdb->query( 'SET autocommit = 0;' );
+		$wpdb->query( 'SET autocommit=0;' );
 		$wpdb->query( 'START TRANSACTION;' );
 		add_filter( 'query', array( $this, '_create_temporary_tables' ) );
 		add_filter( 'query', array( $this, '_drop_temporary_tables' ) );
@@ -272,7 +272,7 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function commit_transaction() {
 		global $wpdb;
-		$wpdb->query( 'ROLLBACK' );
+		$wpdb->query( 'ROLLBACK;' );
 	}
 	
 	/**
@@ -282,7 +282,7 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public static function rollback_transaction() {
 		global $wpdb;
-		$wpdb->query( 'ROLLBACK' );
+		$wpdb->query( 'ROLLBACK;' );
 	}
 
 	function _create_temporary_tables( $query ) {

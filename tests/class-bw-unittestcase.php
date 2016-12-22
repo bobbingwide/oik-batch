@@ -18,19 +18,23 @@
 class BW_UnitTestCase extends WP_UnitTestCase {
 
 	public static function setUpBeforeClass() {
+		bw_trace2();
 		self::rollback_transaction();
 	}
 	
 	public static function tearDownAfterClass() {
+		bw_trace2();
 		self::rollback_transaction();
 	} 
 	
 	public static function rollback_transaction() {
 		global $wpdb;
-		$wpdb->query( 'ROLLBACK' );
+		$wpdb->query( 'ROLLBACK;' );
+		bw_trace2();
 	}
 	
 	public static function commit_transaction() {
+		bw_trace2();
 		gob();
 	}
 

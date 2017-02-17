@@ -211,7 +211,7 @@ function bw_show_content( $index )
 function bw_gzdecode( $data )
 {
 
-  $g=tempnam('/tmp','ff');
+  $g=tempnam( sys_get_temp_dir(), 'ff');
   file_put_contents($g,$data);
   ob_start();
   readgzfile($g);

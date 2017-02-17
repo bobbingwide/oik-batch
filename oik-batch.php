@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2013-2016
+<?php // (C) Copyright Bobbing Wide 2013-2017
 /*
 Plugin Name: oik-batch
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
@@ -8,7 +8,7 @@ Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPL2
 
-    Copyright 2013 - 2016 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2013 - 2017 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,
@@ -54,7 +54,7 @@ if ( !function_exists( "oik_batch_load_lib" ) ) {
  */
 function oik_batch_loaded() {
 	if ( PHP_SAPI == "cli" ) {
-		if ( $_SERVER['argv'][0] == "boot-fs.php" )   {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			// This is WP-CLI
 		} else {
 			oik_batch_load_lib( "oik-cli" );

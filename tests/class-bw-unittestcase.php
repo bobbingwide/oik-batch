@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016,2017
 
 /**
  * BW_UnitTestCase is for In situ testing of WordPress plugins and themes
@@ -13,6 +13,8 @@
  *
  * 'In situ' unit tests for WordPress plugins and themes should either inherit from this class or the overridden WP_UnitTestCase
  * delivered by oik-batch.
+ * 
+ * {@see https://dev.mysql.com/doc/refman/5.7/en/commit.html}
  */
 
 class BW_UnitTestCase extends WP_UnitTestCase {
@@ -20,6 +22,9 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	public static function setUpBeforeClass() {
 		bw_trace2();
 		self::rollback_transaction();
+		// It's not the setUpBeforeClass that needs to do this but the setUp(), which does
+		//self::my_start_transaction();
+		//self::set_autocommit_0();
 	}
 	
 	public static function tearDownAfterClass() {
@@ -29,13 +34,32 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	
 	public static function rollback_transaction() {
 		global $wpdb;
-		$wpdb->query( 'ROLLBACK;' );
-		bw_trace2();
+		$wpdb->query( 'ROLLBACK' );
+		bw_trace2( $wpdb, "wpdb" );
 	}
 	
+	/**
+	 * Commits the transaction
+	 * 
+	 * We don't expect any calls to this method so we trace it and then go bang.
+	 * @TODO One day this will be implemented properly.
+	 */
 	public static function commit_transaction() {
 		bw_trace2();
 		gob();
 	}
+	
+	public static function set_autocommit_0() {
+		global $wpdb;
+		$wpdb->query( 'SET AUTOCOMMIT=0' );
+		bw_trace2( $wpdb, "wpdb" );
+	}
+	
+	public static function my_start_transaction() {
+		global $wpdb;
+		$wpdb->query( 'START TRANSACTION' );
+		bw_trace2( $wpdb, "wpdb" );
+	}
+	
 
 }

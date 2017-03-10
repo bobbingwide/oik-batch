@@ -14,6 +14,10 @@
  * 'In situ' unit tests for WordPress plugins and themes should either inherit from this class or the overridden WP_UnitTestCase
  * delivered by oik-batch.
  * 
+ * Any test that might cause a database change and that which implements the setUp() method
+ * must also call call parent::setUp() to ensure that the transactions are rolled back at the end.
+ * 
+ * 
  * {@see https://dev.mysql.com/doc/refman/5.7/en/commit.html}
  */
 

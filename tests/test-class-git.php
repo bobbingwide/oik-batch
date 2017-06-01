@@ -41,8 +41,12 @@ class test_class_git extends BW_UnitTestCase {
 	 */ 
 	function test_command() {
 		$git = git();
+		$this->expectOutputString( "git ls-files " . PHP_EOL );
 		$result = $git->command( "list" );
 		$this->assertContains( "tests/test-class-git.php", $result );
+		$actual = $this->getActualOutput();
+		bw_trace2( $actual, "actual output", false );
+		//echo $actual;
 	}
 	
 	/**

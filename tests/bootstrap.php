@@ -270,6 +270,13 @@ function continue_loading_bootstrap( $wordpress_develop_dir ) {
 function load_bootstrap_functions( $wordpress_develop_dir ) {
 	if ( $wordpress_develop_dir ) {
 	
+		/**
+		 * Compatibility with PHPUnit 6+
+		*/
+		if ( class_exists( 'PHPUnit\Runner\Version' ) ) {
+			require_once $wordpress_develop_dir . '/includes/phpunit6-compat.php';
+		}
+	
 
 		if ( ! defined( 'WP_TESTS_FORCE_KNOWN_BUGS' ) ) {
 			define( 'WP_TESTS_FORCE_KNOWN_BUGS', false );

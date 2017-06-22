@@ -256,6 +256,7 @@ function continue_loading_bootstrap( $wordpress_develop_dir ) {
  *
  * File | Loaded from | Notes
  * ---- | ------------ | -----------------
+ * phpunit6-compat.php | WP | Required for PHPUnit 6 class aliases
  * factory.php | WP | this loads a load of factory classes
  * class-basic-object.php | - | 
  * class-basic-subclass.php | - | 
@@ -305,7 +306,6 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
  * 
  * 
  */
-
 function locate_wordpress_develop_tests_plugin() {
 	$tests_dir = null;
 	$file = oik_path( "phpunit/includes/functions.php", "wordpress-develop-tests" );
@@ -319,6 +319,7 @@ function locate_wordpress_develop_tests_plugin() {
 /**
  * Check WordPress develop tests are compatible with WordPress installation
  *
+ * Assumes that newer versions of the WordPress develop tests could be incompatible with older versions of WordPress core.
  */
 function check_wordpress_develop_tests_version() {
 	require_once( ABSPATH . "wp-admin/includes/plugin.php" );

@@ -1,11 +1,11 @@
 <?php // (C) Copyright Bobbing Wide 2013-2017
 /*
 Plugin Name: oik-batch
-Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-batch
+Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a subset of WordPress 
-Version: 0.9.0
+Version: 0.9.1
 Author: bobbingwide
-Author URI: http://www.oik-plugins.com/author/bobbingwide
+Author URI: https://www.oik-plugins.com/author/bobbingwide
 License: GPL2
 
     Copyright 2013 - 2017 Bobbing Wide (email : herb@bobbingwide.com )
@@ -47,7 +47,7 @@ if ( !function_exists( "oik_batch_load_lib" ) ) {
  * Bootstrap logic for oik-batch
  * 
  * 
- * The checks if we're running as "CLI" - command line interface
+ * This checks if we're running as "CLI" - command line interface
  * - If we are then we prepare the batch environment
  * - then, if this file is the first file then we run the routine specified on the command line.
  * 

@@ -1,7 +1,7 @@
 <?php // (C) Copyright Bobbing Wide 2016
 
 /**
- * Run git status against each plugin and theme to check if the git repository has changes that need to be committed
+ * Runs git status against each plugin and theme to check if the git repository has changes that need to be committed
  *
  * Syntax: batch oik-git.php
  * 

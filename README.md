@@ -1,11 +1,11 @@
 # oik-batch 
 ![banner](https://raw.githubusercontent.com/bobbingwide/oik-batch/master/assets/oik-batch-banner-772x250.jpg)
 * Contributors: bobbingwide,vsgloik
-* Donate link: http://www.oik-plugins.com/oik/oik-donate/
+* Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: batch, WordPress, CLI, PHPUnit
 * Requires at least: 4.4
-* Tested up to: 4.7
-* Stable tag: 0.9.0
+* Tested up to: 4.8
+* Stable tag: 0.9.1
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: oik-batch
@@ -22,7 +22,9 @@ Components
 
 * oik-wp - Batch WordPress - standalone processing using a complete WordPress installation but not using WP-CLI
 * oik-batch - Batch interface to WordPress servers
-* Sub-component: oik-git - Simple Git status checker
+* Sub-component: oik-git - Checks the status of Git repositories
+* Sub-component: oik-innodb - Detects MyISAM tables and converts them to InnoDB
+* Sub-component: oik-sqldump - Runs mysqldump ( early version )
 
 oik-wp
 
@@ -41,7 +43,19 @@ oik-batch
 
 * Sub component: oik-git
 
-* Run under oik-batch, checks the status of Git repositories
+* Run under oik-batch, checks the status of Git repositories for changes that need to be committed
+* Syntax: batch oik-git.php from the plugin or theme directory
+
+* Sub component: oik-innodb
+
+* Converts MyISAM tables to InnoDB to enable in situ PHPUnit tests
+* Syntax: oikwp oik-innodb.php
+
+* Sub component: oik-sqldump
+
+* Syntax: oikwp oik-sqldump.php
+* Creates a backup of your MySQL database
+* Target directory hardcoded as C:/backups-qw/qw/sqldumps
 
 
 ## Installation 
@@ -51,6 +65,13 @@ oik-batch
 
 ## Frequently Asked Questions 
 # What other components are in oik-batch? 
+
+* createapi2.php -
+* listapis2.php
+* list_oik_plugins.php
+* oik-load.php
+* oik-locurl.php
+* oik-site.php
 
 
 # What are the dependencies? 
@@ -117,6 +138,9 @@ php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plu
 1. oik-batch in action performing createapi2.php
 
 ## Upgrade Notice 
+# 0.9.1 
+Tested with WordPress 4.8. Supports PHPUnit 5.7, 6.1, 6.2.
+
 # 0.9.0 
 Tested with WordPress 4.7. Upgrade to this version to perform In situ PHPUnit tests of WordPress plugins and themes.
 
@@ -166,11 +190,25 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 ## Changelog 
+# 0.9.1 
+* Added: oik-innodb.php Add logic to detect MyISAM tables and convert to InnoDB, https://github.com/bobbingwide/oik-batch/issues/17
+* Added: oik-sqldump.php First pass of logic to run mysqldump, https://github.com/bobbingwide/oik-batch/issues/14
+* Changed: Added some methods that confirmed you need to call parent::setUp() in your own setUp() for database to be rolled back
+* Changed: Improve detection of PHP CLI, https://github.com/bobbingwide/oik-batch/issues/19
+* Changed: Improve detection of WP-cli, https://github.com/bobbingwide/oik-batch/issues/12
+* Changed: Prepare oik-cli.php as a shared library file, https://github.com/bobbingwide/oik-batch/issues/15
+* Changed: Replace WP_UnitTestCase by BW_UnitTestCase, https://github.com/bobbingwide/oik-batch/issues/16
+* Changed: Supports PHPUnit 6.1 and 6.2, https://github.com/bobbingwide/oik-batch/issues/22
+* Changed: Added some helper functions in BW_UnitTestCase, https://github.com/bobbingwide/oik-batch/issues/24
+* Fixed: Support PHP 7.1, https://github.com/bobbingwide/oik-batch/issues/18
+* Tested: With PHP 7 and 7.1
+* Tested: With PHPUnit 6.1 and 6.2
+* Tested: With WordPress 4.8
+
 # 0.9.0 
 * Fixed: Versions of oik-wp and oik-batch must match latest level https://github.com/bobbingwide/oik-batch/issues/13
 * Changed: Improve support for PHPUnit testing plugins in situ https://github.com/bobbingwide/oik-batch/issues/11
 * Tested: With WordPress 4.7
-
 
 # 0.8.7 
 * Changed: Remove dependency on oik or oik-bwtrace https://github.com/bobbingwide/oik-batch/issues/10

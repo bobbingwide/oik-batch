@@ -65,5 +65,85 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		bw_trace2( $wpdb, "wpdb" );
 	}
 	
+	/**
+	 * Replaces the admin_url in $expected
+	 * 
+	 * @param string $expected
+	 * @return updated string
+	 */
+	function replace_admin_url( $expected ) {
+		$expected = str_replace( "http://qw/src/wp-admin/", admin_url(), $expected );
+		return $expected;
+	}
+	
+	/**
+	 * Replaces the generated oik_url in $html
+	 *
+	 * @param string $html
+	 * @return string modified $html
+	 */
+	function replace_oik_url( $html ) {
+		$html = str_replace( oik_url(), "http://qw/src/wp-content/plugins/oik/", $html );
+		return $html;
+	}
+	
+	/**
+	 * Return array of HTML tags
+	 * 
+	 * Breaks the HTML into lines at tag interfaces and converts into an array.
+	 *
+	 * New line characters are inserted between adjacent '>' and '<' characters.
+	 *
+	 * @param string $html
+	 * @return array $html_array
+	 */
+	function tag_break( $html ) {
+		$new_lined = str_replace( "><", ">\n<", $html);
+		$html_array = explode( "\n", $new_lined );
+		return $html_array;
+	}
+	
+	/**
+	 * Helps to generate the expected array from actual test output
+	 *
+	 * This function should not be invoked in a completed test case.
+	 * Echoing this output ensures we get a message from PHPUnit; so does the assertion.
+	 * 
+	 * @param array $html_array
+	 * 
+	 */
+	function generate_expected( $html_array ) {
+		echo PHP_EOL;
+		echo '$expected = array();';
+		foreach ( $html_array as $line ) {
+			echo PHP_EOL;
+			$line = str_replace( "'", "\'", $line );
+			echo '$expected[] = \'' . $line . "';";
+		}
+		echo PHP_EOL;
+		$this->assertFalse( true );
+	}
+	
+	/**
+	 * Replaces generated nonce value with a generic value
+	 * 
+	 * Expects there to be at least one nonce in the input
+	 * 
+	 * @param array generated HTML
+	 * @return array modified HTML where the generated value is now 'nonsense'
+	 */
+	function replace_nonce_with_nonsense( $expected_array ) {
+		$found = false;
+		foreach ( $expected_array as $index => $line ) {
+			$pos = strpos( $line, '<input type="hidden" id="_wpnonce" name="_wpnonce" value="' );
+			if ( false !== $pos ) {
+				$expected_array[ $index ] = '<input type="hidden" id="_wpnonce" name="_wpnonce" value="nonsense" />';
+				$found = true;
+			}
+		}
+		$this->assertTrue( $found );
+		return $expected_array;
+	}
+	
 
 }

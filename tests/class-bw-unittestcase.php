@@ -72,7 +72,7 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	 * @return updated string
 	 */
 	function replace_admin_url( $expected ) {
-		$expected = str_replace( "http://qw/src/wp-admin/", admin_url(), $expected );
+		$expected = str_replace( admin_url(), "https://qw/src/wp-admin/", $expected );
 		return $expected;
 	}
 	

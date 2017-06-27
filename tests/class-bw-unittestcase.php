@@ -145,5 +145,47 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		return $expected_array;
 	}
 	
+	/**
+	 * Replaces an unknown string between two strings with a known value
+	 *
+	 * @param string $string - input string which may contain $before and $after
+	 * @param string $before - substring of the before part
+	 * @param string $after - substring of the after part
+	 * @param string $between - replacement section
+	 * @return null|string updated string or null
+	 */
+	function replace_between( $string, $before, $after, $between ) {
+		$replace = null;
+		$spos = strpos( $string, $before );
+		if ( $spos  ) {
+			$spos += strlen( $before );
+			$epos = strpos( $string, $after );
+			if ( $epos > $spos ) { 
+				$left = substr( $string, 0, $spos );
+				$right = substr( $string, $epos );
+				$replace = $left . $between . $right ;
+			}
+		}
+		return $replace;
+	}
+
+	/**
+	 * Replaces antispambot emails with a known value
+	 * 
+	 * Note: This function could fail if there is no mailto: in the output
+	 */
+	function replace_antispambot( $expected_array ) {
+		$found = false;
+		foreach ( $expected_array as $index => $line ) {
+			$replace = $this->replace_between( $expected_array[ $index ], 'href="mailto:', '" title="', 'email@example.com' );
+			if ( $replace ) {
+				$expected_array[ $index ] = $replace;
+				$found = true;
+			}
+		}
+		$this->assertTrue( $found, "No mailto: found in expected array" );
+		return $expected_array;
+	}
+	
 
 }

@@ -68,8 +68,9 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Replaces the admin_url in $expected
 	 * 
+	 * Note: assumes https protocol
 	 * @param string $expected
-	 * @return updated string
+	 * @return string updated string
 	 */
 	function replace_admin_url( $expected ) {
 		$expected = str_replace( admin_url(), "https://qw/src/wp-admin/", $expected );
@@ -79,16 +80,18 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Replaces the generated oik_url in $html
 	 *
+	 * Note: assumes https protocol
+	 *
 	 * @param string $html
 	 * @return string modified $html
 	 */
 	function replace_oik_url( $html ) {
-		$html = str_replace( oik_url(), "http://qw/src/wp-content/plugins/oik/", $html );
+		$html = str_replace( oik_url(), "https://qw/src/wp-content/plugins/oik/", $html );
 		return $html;
 	}
 	
 	/**
-	 * Return array of HTML tags
+	 * Returns array of HTML tags
 	 * 
 	 * Breaks the HTML into lines at tag interfaces and converts into an array.
 	 *
@@ -128,20 +131,24 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	 * Replaces generated nonce value with a generic value
 	 * 
 	 * Expects there to be at least one nonce in the input
+	 * Note: If there is no matching nonce in the output this method will cause the test to fail.
 	 * 
-	 * @param array generated HTML
+	 * @param array $expected_array generated HTML
+	 * @param string $id nonce ID to search for
+	 * @param string $name nonce name to search for 
 	 * @return array modified HTML where the generated value is now 'nonsense'
 	 */
-	function replace_nonce_with_nonsense( $expected_array ) {
+	function replace_nonce_with_nonsense( $expected_array, $id="_wpnonce", $name="_wpnonce" ) {
 		$found = false;
+		$needle = '<input type="hidden" id="'. $id . '" name="' . $name . '" value="';
 		foreach ( $expected_array as $index => $line ) {
-			$pos = strpos( $line, '<input type="hidden" id="_wpnonce" name="_wpnonce" value="' );
+			$pos = strpos( $line, $needle );
 			if ( false !== $pos ) {
-				$expected_array[ $index ] = '<input type="hidden" id="_wpnonce" name="_wpnonce" value="nonsense" />';
+				$expected_array[ $index ] = $needle. 'nonsense" />';
 				$found = true;
 			}
 		}
-		$this->assertTrue( $found );
+		$this->assertTrue( $found, "No nonce id=$id name=$name found in expected array" );
 		return $expected_array;
 	}
 	
@@ -185,6 +192,118 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		}
 		$this->assertTrue( $found, "No mailto: found in expected array" );
 		return $expected_array;
+	}
+	
+	
+	/**
+	 * Asserts that the HTML array equals the file
+	 */
+	function assertArrayEqualsFile( $string, $file=null ) {
+		$html_array = $this->prepareExpectedArray( $string );
+		$expected_file = $this->prepareFile( $file );
+		$expected = file( $expected_file, FILE_IGNORE_NEW_LINES );
+		$this->assertEquals( $expected, $html_array );	
+	}
+	
+	/**
+	 * Converts to an array if required
+	 */
+	function prepareExpectedArray( $string ) {
+		if ( is_scalar( $string ) ) {
+			$html_array = $this->tag_break( $string );
+		} else { 
+			$html_array = $string;
+		}
+		return $html_array;
+	}
+	
+	/**
+	 * Returns the expected file name
+	 * 
+	 * Expected output files are stored in a directory tree
+	 * 
+	 * `tests/data/la_CY/test_name.html
+	 * ` 
+	 * where 
+	 * - la_CY is the locale; default is `en_US`
+	 * - test_name is the name of the test method
+	 * 
+	 * 
+	 * @param string|null $file - 
+	 * 
+	 */
+	function prepareFile( $file=null ) {
+		if ( !$file ) {
+			$file = $this->find_test_name();
+		}
+		$path_info = pathinfo( $file );
+		if ( '.' == $path_info['dirname'] ) {
+			$dirname = 'tests/data/';
+			$dirname .= $this->query_la_CY();
+			$path_info['dirname'] = $dirname;
+		}
+		if ( !isset( $path_info['extension'] ) ) {
+			$path_info['extension'] = "html";
+		}
+		$expected_file = $path_info['dirname'];
+		$expected_file .= "/";
+		$expected_file .= $path_info['filename'];
+		$expected_file .= ".";
+		$expected_file .= $path_info['extension'];
+		$this->assertFileExists( $expected_file );
+		return $expected_file;
+	}
+	
+	/**
+	 * Finds the test name from the call stack
+	 * 
+	 * Assumes the test name starts with 'test_'
+	 * 
+	 * @param string $prefix
+	 */
+	function find_test_name( $prefix='test_') {
+		$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS );
+		$test_name = null;
+		foreach ( $trace as $frame ) {
+			if ( 0 === strpos( $frame['function'], $prefix ) ) {
+				$test_name = $frame['function'];
+				break;
+			} 
+		}
+		$this->assertNotNull( $test_name );
+		return $test_name;
+	}
+		
+	
+	/**
+	 * When we're working in a different language e.g. bb_BB then
+	 * we append the la_CY to the file name
+	 */
+	function assertArrayEqualsLanguageFile( $string, $file ) {
+		
+		
+	}
+	
+	/**
+	 * Queries the currently set locale
+	 */
+	function query_la_CY() {
+		$locale = get_locale();
+		$this->assertNotNull( $locale );
+		return $locale;
+	} 
+	
+	/**
+	 * Helps to generate the expected file from actual test output
+	 */
+	function generate_expected_file( $html_array ) {
+		echo PHP_EOL;
+		foreach ( $html_array as $line ) {
+			echo $line;
+			echo PHP_EOL;
+		}
+		$this->prepareFile();
+		//$this->assertFalse( true );
 	}
 	
 

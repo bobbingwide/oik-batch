@@ -1,82 +1,26 @@
-{
-    "event": "suiteStart",
-    "suite": "",
-    "tests": 5
-}{
-    "event": "suiteStart",
-    "suite": "Tests_oik_wp_batch_share_libraries",
-    "tests": 1
-}{
-    "event": "testStart",
-    "suite": "Tests_oik_wp_batch_share_libraries",
-    "test": "Tests_oik_wp_batch_share_libraries::test_loading_oik_batch"
-}{
-    "event": "test",
-    "suite": "Tests_oik_wp_batch_share_libraries",
-    "test": "Tests_oik_wp_batch_share_libraries::test_loading_oik_batch",
-    "status": "pass",
-    "time": 0.1792950630188,
-    "trace": [],
-    "message": "",
-    "output": ""
-}{
-    "event": "suiteStart",
-    "suite": "UnitTest",
-    "tests": 2
-}{
-    "event": "testStart",
-    "suite": "UnitTest",
-    "test": "UnitTest::test_case"
-}{
-    "event": "test",
-    "suite": "UnitTest",
-    "test": "UnitTest::test_case",
-    "status": "pass",
-    "time": 0.00019001960754395,
-    "trace": [],
-    "message": "",
-    "output": ""
-}{
-    "event": "testStart",
-    "suite": "UnitTest",
-    "test": "UnitTest::test_oik_path_available"
-}{
-    "event": "test",
-    "suite": "UnitTest",
-    "test": "UnitTest::test_oik_path_available",
-    "status": "pass",
-    "time": 0.00011706352233887,
-    "trace": [],
-    "message": "",
-    "output": ""
-}{
-    "event": "suiteStart",
-    "suite": "Tests_WordPress",
-    "tests": 2
-}{
-    "event": "testStart",
-    "suite": "Tests_WordPress",
-    "test": "Tests_WordPress::test_get_post_meta_function_exists"
-}{
-    "event": "test",
-    "suite": "Tests_WordPress",
-    "test": "Tests_WordPress::test_get_post_meta_function_exists",
-    "status": "pass",
-    "time": 0.00021004676818848,
-    "trace": [],
-    "message": "",
-    "output": ""
-}{
-    "event": "testStart",
-    "suite": "Tests_WordPress",
-    "test": "Tests_WordPress::test_factory_methods_available"
-}{
-    "event": "test",
-    "suite": "Tests_WordPress",
-    "test": "Tests_WordPress::test_factory_methods_available",
-    "status": "pass",
-    "time": 0.15300393104553,
-    "trace": [],
-    "message": "",
-    "output": ""
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="11" assertions="16" errors="0" failures="0" skipped="0" time="2.707832">
+    <testsuite name="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="1.933976">
+      <testcase name="test_replace_antispambot" class="Tests_replace_antispambot" classname="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" line="15" assertions="2" time="1.933976"/>
+    </testsuite>
+    <testsuite name="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" tests="5" assertions="9" errors="0" failures="0" skipped="0" time="0.469373">
+      <testcase name="test_git" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="14" assertions="1" time="0.008528"/>
+      <testcase name="test_php_sapi_constant_matches_name" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="19" assertions="1" time="0.003966"/>
+      <testcase name="test_php_sapi_doesnt_change" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="32" assertions="4" time="0.228216"/>
+      <testcase name="test_command" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="42" assertions="2" time="0.225355"/>
+      <testcase name="test_cant_change_php_sapi_constant" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="60" assertions="1" time="0.003308"/>
+    </testsuite>
+    <testsuite name="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.009861">
+      <testcase name="test_loading_oik_batch" class="Tests_oik_wp_batch_share_libraries" classname="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" line="19" assertions="1" time="0.009861"/>
+    </testsuite>
+    <testsuite name="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.000307">
+      <testcase name="test_case" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="9" assertions="1" time="0.000181"/>
+      <testcase name="test_oik_path_available" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="14" assertions="1" time="0.000126"/>
+    </testsuite>
+    <testsuite name="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.294315">
+      <testcase name="test_get_post_meta_function_exists" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="20" assertions="1" time="0.000186"/>
+      <testcase name="test_factory_methods_available" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="30" assertions="1" time="0.294129"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

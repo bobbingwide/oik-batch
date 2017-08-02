@@ -297,6 +297,7 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	 * Helps to generate the expected file from actual test output
 	 */
 	function generate_expected_file( $html_array ) {
+		$html_array = $this->prepareExpectedArray( $html_array );
 		echo PHP_EOL;
 		foreach ( $html_array as $line ) {
 			echo $line;

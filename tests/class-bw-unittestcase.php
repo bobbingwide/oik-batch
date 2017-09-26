@@ -151,7 +151,23 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		$this->assertTrue( $found, "No nonce id=$id name=$name found in expected array" );
 		return $expected_array;
 	}
-	
+
+	/**
+	 * Replaces the created nonce with nonsense
+	 *
+	 * @param string $html the HTML string
+	 * @param string $action the action that was passed to wp_create_nonce()
+	 * @param string $id the ID that was passed to wp_create_nonce()
+	 * @return string updated HTML
+	 */ 
+	function replace_created_nonce( $html, $action, $id='_wpnonce' ) {
+		$created_nonce = $id . '=' . wp_create_nonce( $action );
+		$pos = strpos( $html, $created_nonce );
+		$this->assertNotFalse( $pos );
+		$html = str_replace( $created_nonce, $id . "=nonsense", $html );
+		return $html;
+	}
+
 	/**
 	 * Replaces an unknown string between two strings with a known value
 	 *
@@ -320,8 +336,8 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	 * Note: For switch_to_locale() see https://core.trac.wordpress.org/ticket/26511 and https://core.trac.wordpress.org/ticket/39210 
 	 */
 	function switch_to_locale( $locale='bb_BB' ) {
-		$tdl = is_textdomain_loaded( "oik" );
-		$this->assertTrue( $tdl );
+		//$tdl = is_textdomain_loaded( "oik" );
+		//$this->assertTrue( $tdl );
 		$switched = switch_to_locale( $locale );
 		if ( $switched ) {
 			$this->assertTrue( $switched );
@@ -354,6 +370,24 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		}
 		oik_require_lib( "oik-l10n" );
 		oik_l10n_enable_jti();
+	}
+	
+	/**
+	 * Reduce a print_r'ed string
+	 *
+	 * print_r's an array then removes unwanted white space
+	 *
+	 * @TODO - remove blank lines
+	 * 
+	 * @param array $array
+	 * @return string a reduced string
+	 */
+	function arraytohtml( $array ) {
+		$string = print_r( $array, true );
+		$again = explode( "\n", $string );
+		$again = array_map( "trim", $again );
+		$string = implode( "\n", $again );
+		return $string;
 	}
 	
 

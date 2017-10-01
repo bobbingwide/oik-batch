@@ -390,5 +390,31 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		return $string;
 	}
 	
+	/**
+	 * Replaces home_url and site_url
+	 *
+	 * Should we consider using https://example.com ?
+	 * @param string $expected
+	 * @return string with site_url and home_url replaced by hard coded values
+	 */
+	function replace_home_url( $expected ) {
+		$expected = str_replace( home_url(), "https://qw/src", $expected );
+		$expected = str_replace( site_url(), "https://qw/src", $expected );
+		return $expected;
+	}
+	
+	/**
+	 * Replaces parameter $post->ID with 42 in selected parameter
+	 * 
+	 * @param string $expected
+	 * @param object $post a post object
+	 * @param string $prefix the prefix to find
+	 * @return string updated HTML
+	 */
+	function replace_post_id( $expected, $post, $prefix="post=" ) {
+		$expected = str_replace( $prefix . $post->ID, $prefix . "42", $expected );
+		return $expected;
+	}
+	
 
 }

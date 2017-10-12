@@ -23,7 +23,7 @@ function oik_innodb_loaded() {
 		$convert = bw_validate_torf( $convert );
 		if ( $convert ) {
 			echo "Converting the MyISAM tables to InnoDB" . PHP_EOL;
-			$this->maybe_convert();
+			$oik_innodb->maybe_convert();
 		}	
 	} 
 }		 

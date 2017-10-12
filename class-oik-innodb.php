@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016,2017
 
 class OIK_innodb {
 
@@ -81,12 +81,14 @@ class OIK_innodb {
 	 * @param string $to_engine
 	 * 
 	 */
-	function convert_engine( $from_engine="MyISAM", $to_engine="InnoDB" ) {
+	function convert_engine( $from_engine="MyISAM", $to_engine="INNODB" ) {
 		global $wpdb;
-		foreach ( $results as $result ) {
+		foreach ( $this->results as $result ) {
 			if ( $from_engine == $result->engine ) {
 				$query = $wpdb->prepare( "ALTER TABLE %s engine=%s", DB_NAME . "." . $result->table_name, $to_engine );
+				$query = sprintf( "ALTER TABLE %s engine=%s", $result->table_name, $to_engine );
 				echo $query;
+				echo PHP_EOL;
 				$rows_affected = $wpdb->query( $query );
 			}
 		}

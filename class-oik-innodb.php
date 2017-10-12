@@ -85,7 +85,7 @@ class OIK_innodb {
 		global $wpdb;
 		foreach ( $this->results as $result ) {
 			if ( $from_engine == $result->engine ) {
-				$query = $wpdb->prepare( "ALTER TABLE %s engine=%s", DB_NAME . "." . $result->table_name, $to_engine );
+				//$query = $wpdb->prepare( "ALTER TABLE %s engine=%s", DB_NAME . "." . $result->table_name, $to_engine );
 				$query = sprintf( "ALTER TABLE %s engine=%s", $result->table_name, $to_engine );
 				echo $query;
 				echo PHP_EOL;

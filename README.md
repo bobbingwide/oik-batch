@@ -3,9 +3,9 @@
 * Contributors: bobbingwide,vsgloik
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: batch, WordPress, CLI, PHPUnit
-* Requires at least: 4.4
-* Tested up to: 4.8
-* Stable tag: 0.9.1
+* Requires at least: 4.8
+* Tested up to: 4.9-beta3
+* Stable tag: 0.9.2
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: oik-batch
@@ -138,6 +138,9 @@ php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plu
 1. oik-batch in action performing createapi2.php
 
 ## Upgrade Notice 
+# 0.9.2 
+Required for in situ PHPUnit test of oik v3.2.0-RC1.
+
 # 0.9.1 
 Tested with WordPress 4.8. Supports PHPUnit 5.7, 6.1, 6.2.
 
@@ -190,6 +193,13 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 ## Changelog 
+# 0.9.2 
+* Changed: Added helper methods for PHPUnit testing of internationalization/localization https://github.com/bobbingwide/oik-batch/issues/24
+* Fixed: ALTER TABLE %s engine=%s musn't have quotes around the table or engine value https://github.com/bobbingwide/oik-batch/issues/17
+* Fixed: Avoid notice when $_SERVER['SERVER_PROTOCOL'] not set https://github.com/bobbingwide/oik-batch/issues/25
+* Tested: With PHP 7.0 and 7.1
+* Tested: With WordPress 4.8.2 and 4.9-beta3
+
 # 0.9.1 
 * Added: oik-innodb.php Add logic to detect MyISAM tables and convert to InnoDB, https://github.com/bobbingwide/oik-batch/issues/17
 * Added: oik-sqldump.php First pass of logic to run mysqldump, https://github.com/bobbingwide/oik-batch/issues/14

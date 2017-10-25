@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016,2017
 
 /** 
  * Perform MYSQLDUMP of the installation's database
@@ -12,7 +12,12 @@
  * - Backup files should not be in the same location as the code
  * - They could be zipped
  * - Backups which are no different from the previous days are... unlikely?
- * - This code should be invocable from PHPUnit and other places
+ * - This code should be invocable from PHPUnit and other places 
+ * - You should be able to restore the database from the backup
+ * 
+ * @TODO The current code is missing a few options that would enable the DB to be restored. 
+ * See https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html#mysqldump-option-file-options
+ * 
  */
 class OIK_sqldump {
 

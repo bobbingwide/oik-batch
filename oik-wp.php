@@ -90,6 +90,7 @@ function oik_wp_loaded() {
 			// This is WP-CLI, so we don't do anything.
 		} else {
 			oik_batch_load_lib( "oik-cli" );
+			oik_batch_merge_argv();
 			oik_batch_start_wordpress();
 			
 			/*

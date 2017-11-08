@@ -561,6 +561,15 @@ function oik_batch_run() {
 }
 
 /**
+ * Merges argv and argv-saved back into a single array
+ */
+function oik_batch_merge_argv() {
+	if ( isset( $_SERVER['argv-saved'] ) ) {
+		$_SERVER['argv'] = array_merge( $_SERVER['argv'], $_SERVER['argv-saved'] );
+	}
+}
+
+/**
  * Run a script in batch
  *
  * @TODO Check these comments

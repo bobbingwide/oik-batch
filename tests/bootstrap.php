@@ -282,6 +282,10 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		if ( ! defined( 'WP_TESTS_FORCE_KNOWN_BUGS' ) ) {
 			define( 'WP_TESTS_FORCE_KNOWN_BUGS', false );
 		}
+		
+		if ( !defined( 'WP_TESTS_DOMAIN' ) ) {
+			define( 'WP_TESTS_DOMAIN', $_SERVER['HTTP_HOST'] );
+    }
 		//require $wordpress_develop_dir . '/includes/functions.php';
 		oik_require( "tests/functions.php", "oik-batch" );
 		//require_once dirname( __FILE__ ) . '/trac.php';

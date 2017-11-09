@@ -3,7 +3,7 @@ Contributors: bobbingwide,vsgloik
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI, PHPUnit
 Requires at least: 4.8
-Tested up to: 4.9-beta3
+Tested up to: 4.9-RC2
 Stable tag: 0.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,6 +24,7 @@ Components
 * Sub-component: oik-git - Checks the status of Git repositories
 * Sub-component: oik-innodb - Detects MyISAM tables and converts them to InnoDB
 * Sub-component: oik-sqldump - Runs mysqldump ( early version )
+* Super-component: oik-phpunit - in situ PHPUnit test invocation for WordPress MultiSite
 
 oik-wp
 
@@ -55,6 +56,12 @@ Sub component: oik-sqldump
 * Syntax: oikwp oik-sqldump.php
 * Creates a backup of your MySQL database
 * Target directory hardcoded as C:/backups-qw/qw/sqldumps
+
+Super component: oik-phpunit
+
+* Syntax: php oik-phpunit.php PHPUnit parms url=domain path=site-path
+* Supports invocation of in situ PHP testing for WordPress MultiSite
+* Calls PHPUnit having previously saved the parameters required to start WordPress MultiSite in a batch environment
 
 
 == Installation ==
@@ -131,12 +138,23 @@ Alternatively oik-batch.php can be included in the main routine.
 php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plugin=%1 --site=http://oik-plugins.co.uk --apikey=apikey
 `
 
+wu.bat for invoking oik-phpunit.php
+
+`
+set PRE_PHPUNIT_CD=%CD%
+set PHPUNIT=c:\apache\htdocs\phpLibraries\phpunit\phpunit-6.2.0.phar
+php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--verbose" "--disallow-test-output" "--stop-on-error" "--stop-on-failure" "--log-junit=phpunit.json" %*
+
+`
 
 
 == Screenshots ==
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 0.9.3 =
+Required for in situ PHPUnit tests running under WordPress Multisite 
+
 = 0.9.2 = 
 Required for in situ PHPUnit test of oik v3.2.0-RC1. 
 
@@ -192,6 +210,12 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 0.9.3 = 
+* Added: oik-phpunit.php for in situ PHPUnit testing under WordPress Multisite [github bobbingwide oik-batch issue 9]
+* Added: oik_batch_merge_argv in libs/oik-cli.php to reapply args hidden from PHPUnit
+* Changed: oik-wp.php Calls oik_batch_merge_argv()
+* Changed: tests/bootstrap.php - sets WP_TEST_DOMAIN when multisite
+
 = 0.9.2 = 
 * Changed: Added helper methods for PHPUnit testing of internationalization/localization [github bobbingwide oik-batch issue 24]
 * Fixed: ALTER TABLE %s engine=%s musn't have quotes around the table or engine value [github bobbingwide oik-batch issues 17]

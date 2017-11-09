@@ -15,6 +15,16 @@
  * `
  */
  
+if ( PHP_SAPI !== "cli" ) { 
+	die();
+}
+
+/**
+ * Runs PHPUnit 
+ * 
+ * - Hides args that PHPUnit doesn't understand
+ * - Invokes PHPUnit
+ */
 function oik_phpunit_loaded() {
 	oik_phpunit_save_our_args();
 	oik_phpunit_run_phpunit();
@@ -23,28 +33,25 @@ function oik_phpunit_loaded() {
 /**
  * Save our args.
  * 
- * It's not possible to pass parameters through PHPUnit to the bootstrap routine
+ * It's not possible to pass parameters through PHPUnit to the bootstrap routine.
  * So we hide them from PHPUnit and re-instate them later on.
- * So far the only two parameters we need are for WordPress MultiSite
+ * So far the only two parameters we need are for WordPress MultiSite.
  * 
- * Parameter | Purpose     | Example   | Notes
- * --------  | -------     | --------  | ---------
- * url       | WPMS domain | url=qw    | 
- * path      | WPMS path   | path=wpms | 
+ * Parameter | Purpose       | Example          | Notes
+ * --------  | -------       | --------         | ---------
+ * url       | WPMS domain   | url=qw           | 
+ * path      | WPMS path     | path=wpms        |	Primary site -  https://qw/wpms
+ * path      | WPMS subsite  | path=wpms/site-2 |	Child site - https:/qw/wpms/site-2
  * 
- * @TODO - Current logic only selects the primary site! 
- *
+ * Note: Leading and trailing slashes will be added to the path parameter if not null.
  */
 function oik_phpunit_save_our_args() {
-
-
 	foreach ( $_SERVER['argv'] as $index => $arg ) {
 		$kvp = explode( "=", $arg );
 		if ( in_array( $kvp[0],  array( "url", "path" ) ) ) {
 			$_SERVER['argv-saved'][] = $arg;
 			unset( $_SERVER['argv'][$index] );
 		}
-		
 	}
 }	
 

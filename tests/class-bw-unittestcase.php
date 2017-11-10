@@ -67,6 +67,8 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	
 	/**
 	 * Replaces the admin_url in $expected
+	 *
+	 * For WPMS we need to support network_admin_url(). This has to be done in a separate method.
 	 * 
 	 * Note: assumes https protocol
 	 * @param string $expected
@@ -398,6 +400,8 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	 * @return string with site_url and home_url replaced by hard coded values
 	 */
 	function replace_home_url( $expected ) {
+		$upload_dir = wp_upload_dir();
+		$expected = str_replace( $upload_dir['baseurl'] , "https://qw/src/wp-content/uploads", $expected );
 		$expected = str_replace( home_url(), "https://qw/src", $expected );
 		$expected = str_replace( site_url(), "https://qw/src", $expected );
 		return $expected;

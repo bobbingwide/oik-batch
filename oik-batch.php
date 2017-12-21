@@ -59,7 +59,7 @@ function oik_batch_loaded() {
 		} else {
 			oik_batch_load_lib( "oik-cli" );
 			oik_batch_debug();
-			oik_batch_trace( true );
+			//oik_batch_trace( true );
 			oik_batch_define_constants();
 			oik_batch_load_oik_boot();
 			oik_batch_simulate_wp_settings();

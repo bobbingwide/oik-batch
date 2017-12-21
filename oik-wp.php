@@ -102,7 +102,7 @@ function oik_wp_loaded() {
 			echo getcwd() . PHP_EOL;
 			
 			oik_batch_debug();
-			oik_batch_trace( true );
+			//oik_batch_trace( true );
       
 			//oik_batch_define_constants();	 // @TODO Not necessary in oik-wp since WordPress has done all of this! 
 			oik_batch_load_oik_boot();

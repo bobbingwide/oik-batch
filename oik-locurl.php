@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016-2018
 
 /**
  * Syntax: oikwp oik-locurl.php locurl url=domain path=path
@@ -27,7 +27,7 @@ function oik_locurl_loaded() {
 	
 	if ( !$locurl ) {
 		//echo "Please specify the local URL for the site" . PHP_EOL;
-		//echo "Syntax: oikwp oik-locurl locurl" . PHP_EOL;
+		//echo "Syntax: oikwp oik-locurl.php locurl" . PHP_EOL;
 		oik_locurl_report_options();
 	} else {
 		oik_locurl_update_options( $locurl );

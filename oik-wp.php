@@ -58,6 +58,7 @@ if ( !function_exists( "oik_batch_load_lib" ) ) {
  */
 function oik_batch_start_wordpress() {
 	$abspath = oik_batch_locate_wp_config_for_phpunit();
+	
 	if ( !$abspath ) {
 		$abspath = oik_batch_locate_wp_config();
 	}

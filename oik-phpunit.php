@@ -62,12 +62,20 @@ function oik_phpunit_save_our_args() {
  * `
  * set PHPUNIT=c:\apache\htdocs\phpLibraries\phpunit\phpunit-6.2.0.phar
  * `
+ *
+ * Note: Without the `echo PHP_EOL;` we get a whole load of unexpected carriage returns appearing in the PHPUnit output.
+ * This is especially annoying if you are redirecting the output to stdout because you intend to copy/paste the output into a tests\data file.
+ * Fortunately this extra line resolves the problem. 
  */
 function oik_phpunit_run_phpunit() {
 	$phpunit = getenv( "PHPUNIT" );
 	echo $phpunit;
+	echo PHP_EOL;
 	include $phpunit;
 	PHPUnit\TextUI\Command::main();
+	echo "I don't think we'll get here" . PHP_EOL;
+	echo "oik-phpunit ended" . PHP_EOL;
+	
 }
 
 oik_phpunit_loaded(); 

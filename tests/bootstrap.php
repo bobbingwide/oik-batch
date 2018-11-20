@@ -294,12 +294,18 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		oik_require( "tests/testcase.php", "oik-batch" );
 		oik_require( "tests/class-bw-unittestcase.php", "oik-batch" );
 		require $wordpress_develop_dir . '/includes/testcase-rest-api.php';
+		require $wordpress_develop_dir . '/includes/testcase-rest-controller.php';
+		require $wordpress_develop_dir . '/includes/testcase-rest-post-type-controller.php';
 		require $wordpress_develop_dir . '/includes/testcase-xmlrpc.php';
 		require $wordpress_develop_dir . '/includes/testcase-ajax.php';
 		require $wordpress_develop_dir . '/includes/testcase-canonical.php';
 		require $wordpress_develop_dir . '/includes/exceptions.php';
 		require $wordpress_develop_dir . '/includes/utils.php';
 		require $wordpress_develop_dir . '/includes/spy-rest-server.php';
+		
+		define( 'DIR_TESTDATA',  $wordpress_develop_dir . '/data' );
+		
+		
 	} else {
 		echo "No WordPress develop test files loaded" . PHP_EOL;
 	}

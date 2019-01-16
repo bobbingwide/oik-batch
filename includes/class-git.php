@@ -37,6 +37,8 @@ class Git {
 	 * $commands
 	 */
 	 public $commands = array();
+
+	 public $message = null;
 	
 	/**
 	 * @var Git - the true instance
@@ -78,6 +80,8 @@ class Git {
 													 , "current" => "log --oneline -1"
 													 , "gitdir" => "rev-parse --show-toplevel"
 													 , "cdup" => "rev-parse --show-cdup"
+			, "remote" => "remote -v"
+			, "pull" => "pull"
 													 ); 
 	}
 	
@@ -93,20 +97,20 @@ class Git {
 	 *
 	 */
 	public function is_git( $source_dir ) {
-		echo "is_git: " . $source_dir . PHP_EOL;
+		$this->echo( "is_git: " . $source_dir . PHP_EOL );
 		$changed = $this->chdir( $source_dir );
 		if ( $changed ) {
 			$this->source_dir = $source_dir;	
 		
 			$cdup = $this->command( "cdup" );
-			echo "CDUP: $cdup" . PHP_EOL;
+			//echo "CDUP: $cdup" . PHP_EOL;
 			
 			//$gitdir = $this->command( "gitdir" );
 			//echo "gitdir: $gitdir" . PHP_EOL;
 			$changed = $this->reset_dir( $changed );
 			if ( $this->is_repo() ) {
 				if ( $cdup ) {
-					echo "Git repo is not in the root" . PHP_EOL;
+					$this->echo( "Git repo is not in the root" . PHP_EOL );
 					$source_dir = null;
 				}else {
 					$this->source_dir = $source_dir;
@@ -118,7 +122,7 @@ class Git {
 			$source_dir = null;
 		}
 		
-		echo "returning: " .  $source_dir	. PHP_EOL;
+		$this->echo( "returning: " .  $source_dir	. PHP_EOL );
 		return( $source_dir );
 	}
 	
@@ -167,7 +171,7 @@ class Git {
 		}
 		if ( $this->cwd ) {
 			chdir( $this->cwd );
-			echo "Reset dir to: " . $this->cwd . PHP_EOL;
+			$this->echo( "Reset dir to: " . $this->cwd . PHP_EOL );
 		}
 		$this->cwd = null;
 	}
@@ -212,7 +216,7 @@ class Git {
 	 *
 	 */
 	public function execute( $cmd ) {
-		echo $cmd . PHP_EOL;
+		$this->echo( $cmd . PHP_EOL );
 		$result = shell_exec( "$cmd 2>&1" );
 		$this->result = trim( $result );
 		//echo "execute result:" . $result . ":" . PHP_EOL;
@@ -243,27 +247,27 @@ class Git {
 	 * @param string $directory 
 	 */
 	function check_status( $directory ) {
-		echo "Looking for Git repos in $directory" . PHP_EOL;
+		$this->echo( "Looking for Git repos in $directory" . PHP_EOL );
 		$files = scandir( $directory );
 		foreach ( $files as $file ) {
 			
 			if ( $file != "." && $file !== ".." && $file !== ".git" ) {
 			
 				if ( is_dir( $file ) ) {
-					echo "$file is a directory" . PHP_EOL;
+					$this->echo( "$file is a directory" . PHP_EOL );
 					$source = $this->is_git( $directory . "/" . $file );
 					if ( $source ) {
 						// Can't quite remember what this next line's purpose was.
 						//echo "git clone https://github.com/bobbingwide/$file" . PHP_EOL;
 						chdir( $source );
 						$result = $this->command( "status", null );
-						echo $result;
-						echo PHP_EOL;
+						$this->echo( $result );
+						$this->echo(  PHP_EOL );
 						if ( $result ) {	
 							oikb_get_response( "Continue?", true );
 						}
 					} else {
-						echo "$source is not a git folder" . PHP_EOL;
+						$this->echo( "$source is not a git folder" . PHP_EOL );
 					}
 					chdir( $directory );
 					
@@ -274,6 +278,22 @@ class Git {
 				}
 			}
 		}
-	}			
+	}
+	/**
+	 * Safely echo in batch environment
+	 *
+	 * Stores echoed output for JSON requests
+	 * @param $string
+	 */
+	function echo( $string=PHP_EOL ) {
+		if ( "cli" === php_sapi_name() ) {
+			echo $string;
+			if ( $string != PHP_EOL ) {
+				echo PHP_EOL;
+			}
+		} else {
+			$this->message .= $string;
+		}
+	}
 
 }

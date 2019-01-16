@@ -33,9 +33,39 @@ function oik_wp_check_git() {
 	if ( function_exists( "git")) {
 		$git = git();
 		BW_::p( "Git class loaded");
+		$result = $git->execute( "uname");
+		BW_::p( $result );
 		$result = $git->command();
 		BW_::p( $result );
+		$repo = $git->is_repo();
+		if ( $repo ) {
+			BW_::p( "Git repo!" );
+		}
+		oik_wp_check_plugins( $git );
 	}
 
 	//print_r( $lib );
+}
+
+function oik_wp_check_plugins( $git ) {
+	$glob = glob( WP_PLUGIN_DIR . '/*', GLOB_ONLYDIR );
+	foreach ( $glob as $dir ) {
+		$plugin = basename( $dir );
+		e( $plugin );
+		$is_git = $git->is_git( $dir );
+		//e( $is_git );
+		if ( $is_git === $dir  ) {
+			//e( " tada");
+			$remote = $git->command( "remote" );
+			e( " " );
+			e( $remote );
+			
+
+		} else {
+
+		}
+		br();
+
+
+	}
 }

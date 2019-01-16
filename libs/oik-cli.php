@@ -251,7 +251,7 @@ function oik_batch_query_value_from_argv( $key="url", $default="localhost" ) {
  * @param array $argv 
  * @param integer $index
  * @param string $default 
- * @return string the parameter value. Note the passsed default value may be null
+ * @return string the parameter value. Note the passed default value may be null
  */
 function oik_batch_query_positional_value_from_argv( $argv, $index, $default ) {
 	$arg_index = 0;
@@ -509,6 +509,7 @@ function oik_batch_trace( $trace_on=false ) {
 function oik_batch_admin_menu() {
 	
   oik_register_plugin_server( __FILE__ );
+  add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
 }
 
 /**
@@ -615,6 +616,14 @@ function oik_batch_run_script( $script ) {
 		// How does WP-cli work?  
   }
 }
+
+	/**
+	 * Display the oik-batch / oik-wp menu box
+	 */
+	function oik_batch_oik_menu_box() {
+		oik_require( "admin/oik-wp.php", "oik-batch" );
+		oik_wp_lazy_oik_menu_box();
+	}
 
 
 } /* end if !defined */

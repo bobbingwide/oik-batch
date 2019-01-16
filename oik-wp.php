@@ -1,9 +1,9 @@
-<?php // (C) Copyright Bobbing Wide 2013-2017
+<?php // (C) Copyright Bobbing Wide 2013-2019
 /*
 Plugin Name: oik-wp
 Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-batch
 Description: standalone processing using a complete WordPress installation but not using WP-CLI 
-Version: 0.9.3
+Version: 1.0.0
 Author: bobbingwide
 Author URI: https://www.oik-plugins.com/author/bobbingwide
 Text Domain: oik-wp
@@ -11,7 +11,7 @@ Domain Path: /languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2013-2017 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2013-2019 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,

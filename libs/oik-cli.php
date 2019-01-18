@@ -1,6 +1,6 @@
-<?php // (C) Copyright Bobbing Wide 2015-2017
+<?php // (C) Copyright Bobbing Wide 2015-2019
 if ( !defined( "OIK_CLI_INCLUDED" ) ) {
-	define( "OIK_CLI_INCLUDED", "0.9.3" );
+	define( "OIK_CLI_INCLUDED", "1.0.0" );
 
 /**
  * Command Line Interface (CLI) functions
@@ -509,7 +509,20 @@ function oik_batch_trace( $trace_on=false ) {
 function oik_batch_admin_menu() {
 	
   oik_register_plugin_server( __FILE__ );
-  add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
+  //add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
+	//add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
+	//add_action( "admin_menu", "oik_batch_admin_menu" );
+	add_submenu_page( 'oik_menu', __( 'oik batch', 'oik' ), __("oik batch", 'oik'), 'manage_options', 'oik_batch', "oik_batch_do_page" );
+
+
+}
+
+	function oik_batch_do_page() {
+
+		BW_::oik_menu_header( __( "oik batch", "oik" ), "w95pc" );
+		BW_::oik_box( null, null, __( 'Git stuff', 'oik' ), "oik_batch_oik_menu_box" );
+		oik_menu_footer();
+		bw_flush();
 }
 
 /**

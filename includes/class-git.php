@@ -218,7 +218,11 @@ class Git {
 	public function execute( $cmd ) {
 		$this->echo( $cmd . PHP_EOL );
 		$result = shell_exec( "$cmd 2>&1" );
+		bw_trace2( $result, "Result:");
+		bw_trace2( $this->hexdump( $result), "Hexdump:" );
+		$result = str_replace( ["\t", "\n", "\r" ], " ", $result );
 		$this->result = trim( $result );
+
 		//echo "execute result:" . $result . ":" . PHP_EOL;
 		return( $this->result );
 	}
@@ -294,6 +298,47 @@ class Git {
 		} else {
 			$this->message .= $string;
 		}
+	}
+
+	/**
+	 * Finds out if the repository needs pulling
+	 *
+	 * - Assumes that $source_dir is set.
+	 *
+	 * @return string
+	 */
+	function maybe_needs_pulling() {
+		$result = $this->command();
+		if ( strlen( $result ) ) {
+			$result .= "<br />Not safe to pull";
+		}
+		return $result;
+	}
+
+	function check_remote() {
+		$remote = null;
+		$remote_result = $this->command( "remote" );
+		$remotes = explode( " ", $remote_result );
+		//echo implode( "!", $remotes );
+		if ( count( $remotes) >= 3 ) {
+			if ( $remotes[2] === "(fetch)" ) {
+				$remote = $remotes[ 1 ];
+			}
+		}
+		return $remote;
+
+	}
+
+	function hexdump( $string ) {
+		if ( !function_exists( "oik_hexdump") ) {
+			oik_require( "libs/hexdump.php", "oik-batch" );
+		}
+		if ( function_exists( "oik_hexdump" ) ) {
+			$string = oik_hexdump( $string );
+		}
+		return $string;
+
+
 	}
 
 }

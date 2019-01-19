@@ -82,7 +82,25 @@ class Git {
 													 , "cdup" => "rev-parse --show-cdup"
 			, "remote" => "remote -v"
 			, "pull" => "pull"
+			, "fetch" => "fetch"
 													 ); 
+	}
+
+
+	/**
+	 * @param $source_dir
+	 */
+	public function has_dot_git( $source_dir ) {
+		$has_dot_git = null;
+		$dot_git = $source_dir . "/.git";
+		$dot_git = str_replace( "/", DIRECTORY_SEPARATOR, $dot_git );
+		//echo $dot_git;
+		if ( file_exists( $dot_git ) && is_dir( $dot_git ) ) {
+			$has_dot_git = $source_dir;
+		} else {
+			//echo "nope <br />";
+		}
+		return $has_dot_git;
 	}
 	
 	/**
@@ -196,9 +214,14 @@ class Git {
 	/**
 	 * Return the actual git command to use
 	 *
+	 * No longer defaulting to "status -s" but the command passed
+	 *
 	 */
-	public function actual_command( $command, $parms=null ) {
-		$actual = bw_array_get( $this->commands, $command, "status -s" );
+	public function actual_command( $command=null, $parms=null ) {
+		if ( null === $command ) {
+			$command = "status -s";
+		}
+		$actual = bw_array_get( $this->commands, $command, $command );
 		$cmd = "git $actual $parms";
 		return( $cmd );
 	}

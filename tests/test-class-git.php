@@ -36,12 +36,14 @@ class test_class_git extends BW_UnitTestCase {
 	}
 	
 	/**
-	 * Expects output: git ls-files
+	 * No longer expects output: git ls-files
+	 * This is returned in $result.
+	 *
 	 *
 	 */ 
 	function test_command() {
 		$git = git();
-		$this->expectOutputString( "git ls-files " . PHP_EOL );
+		$this->expectOutputString( "git ls-files " . PHP_EOL . PHP_EOL );
 		$result = $git->command( "list" );
 		$this->assertContains( "tests/test-class-git.php", $result );
 		$actual = $this->getActualOutput();

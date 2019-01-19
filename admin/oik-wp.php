@@ -1,35 +1,27 @@
 <?php
 
 /**
+ * oik-wp admin page "oik_batch"
+ *
+ * Implements Git update capability for Git installed plugins and themes
+ *
  * @copyright (C) Copyright Bobbing Wide 2019
  * @author @bobbingwide
  *
  */
 
 function oik_wp_lazy_oik_menu_box() {
-
 	BW_::oik_box( null, null, __( "oik-wp admin", "oik-batch" ), "oik_wp_options" );
-
 }
 
 
 /**
  *
+ *
  */
-
-
-
 function oik_wp_options() {
 
 	oik_wp_check_git();
-	//$option = "bw_css_options";
-	//$options = bw_form_start( $option, "oik_css_options" );
-	//bw_checkbox_arr( $option, __( "Disable automatic paragraph creation", "oik-css" ), $options, "bw_autop" );
-	//etag( "table" );
-	//e( isubmit( "ok", __("Save changes", "oik-css" ), null, "button-secondary" ) );
-	//etag( "form" );
-	//BW_::p( __( "To enable automatic paragraph creation use the [bw_autop] shortcode.", "oik-css" ) );
-	//BW_::p( __( "To disable automatic paragraph creation use [bw_autop off].", "oik-css" ) );
 	bw_flush();
 }
 
@@ -44,7 +36,9 @@ function oik_wp_check_git() {
 			$git = git();
 			oik_wp_check_gitability( $git );
 			oik_wp_process_selected_plugin( $git );
+			oik_wp_process_selected_theme( $git );
 			oik_wp_check_plugins( $git );
+			oik_wp_check_themes( $git );
 		} else {
 			BW_::p( "Error with oik-git", "oik-batch" );
 		}
@@ -77,18 +71,31 @@ function oik_wp_try_execute( $git ) {
 
 }
 
-function oik_wp_check_plugins( $git ) {
+function oik_wp_check_components( $git, $component_dir, $component_type ) {
 	$plugins = [];
-	$glob = glob( WP_PLUGIN_DIR . '/*', GLOB_ONLYDIR );
+	$glob = glob( $component_dir . '/*', GLOB_ONLYDIR );
 	foreach ( $glob as $dir ) {
 
 		$result = oik_wp_get_plugin_info( $git, $dir );
-		$result[ 'link' ] = oik_wp_check_plugin_link( $git, $result );
+		$result[ 'link' ] = oik_wp_check_plugin_link( $git, $result, $component_type );
 		$plugins[] = $result;
 	}
 
 	oik_wp_report_plugins( $plugins );
 
+}
+
+
+/**
+ *
+ * @param $git
+ */
+
+function oik_wp_check_plugins( $git ) {
+	oik_wp_check_components( $git, WP_PLUGIN_DIR, "plugin" );
+}
+function oik_wp_check_themes( $git ) {
+	oik_wp_check_components( $git, WP_CONTENT_DIR . '/themes', "theme" );
 }
 
 /**
@@ -98,15 +105,16 @@ function oik_wp_check_plugins( $git ) {
  *
  * @param $git
  * @param $git_plugin_info
+ * @param string $componenttype plugin / theme
  *
  * @return string|null
  */
 
-function oik_wp_check_plugin_link( $git, $git_plugin_info ) {
+function oik_wp_check_plugin_link( $git, $git_plugin_info, $componenttype ) {
 	$link = null;
 	if ( $git_plugin_info[ 'plugin'] && $git_plugin_info[ 'remote'] ) {
 		$plugin = $git_plugin_info[ 'plugin'];
-		$link = retlink( null, admin_url("admin.php?page=oik_batch&amp;check_plugin=$plugin"), __( "Check", null ) );
+		$link = retlink( null, admin_url("admin.php?page=oik_batch&amp;check_$componenttype=$plugin"), __( "Check", null ) );
 	}
 	return $link;
 
@@ -161,14 +169,22 @@ function oik_wp_check_plugin( $git, $dir ) {
 
 }
 
+function oik_wp_process_selected_plugin( $git ) {
+	oik_wp_process_selected_component( $git, WP_PLUGIN_DIR, "plugin" );
+}
+
+function oik_wp_process_selected_theme( $git ) {
+	oik_wp_process_selected_component( $git, WP_CONTENT_DIR . '/themes', "theme" );
+}
+
 /**
  * @param $git
  */
 
-function oik_wp_process_selected_plugin( $git ) {
-	$plugin = bw_array_get( $_REQUEST, "check_plugin", null );
+function oik_wp_process_selected_component( $git, $component_dir, $componenttype ) {
+	$plugin = bw_array_get( $_REQUEST, "check_$componenttype", null );
 	if ( $plugin ) {
-		$dir = WP_PLUGIN_DIR . '/' . $plugin;
+		$dir = $component_dir . '/' . $plugin;
 		h3( "Checking: $plugin" );
 		$git_plugin_info = oik_wp_check_plugin( $git, $dir );
 		oik_wp_print_key_value( "Remote", $git_plugin_info['remote'] );

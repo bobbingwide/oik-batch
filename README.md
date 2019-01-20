@@ -3,9 +3,9 @@
 * Contributors: bobbingwide,vsgloik
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: batch, WordPress, CLI, PHPUnit
-* Requires at least: 4.8
-* Tested up to: 4.9-RC2
-* Stable tag: 0.9.2
+* Requires at least: 4.9.8
+* Tested up to: 5.0.3
+* Stable tag: 1.0.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: oik-batch
@@ -33,6 +33,7 @@ oik-wp
 * Connects to your chosen local WordPress environment.
 * Supports direct invocation of batch processes.
 * Supports running PHPUnit tests for WordPress plugins or themes in situ.
+* Supports installations with Git based plugins and themes
 
 
 oik-batch
@@ -153,6 +154,9 @@ php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--v
 1. oik-batch in action performing createapi2.php
 
 ## Upgrade Notice 
+# 1.0.0 
+Upgrade to support maintenance of Git based plugins and themes from the WordPress dashboard.
+
 # 0.9.3 
 Required for in situ PHPUnit tests running under WordPress Multisite
 
@@ -211,6 +215,14 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 ## Changelog 
+# 1.0.0 
+* Added: oik batch admin page for Git plugins and themes, https://github.com/bobbingwide/oik-batch/issues/34
+* Added: Add oik-uploads.php to copy upload files https://github.com/bobbingwide/oik-batch/issues/28
+* Fixed: Don't call oik_batch_trace https://github.com/bobbingwide/oik-batch/issues/26
+* Fixed: Cater for multisite upload directories https://github.com/bobbingwide/oik-batch/issues/9
+* Changed: Updated PHP unit test for WordPress 5.0
+* Changed: Other miscellaneous changes committed 2018/11/20
+
 # 0.9.3 
 * Added: oik-phpunit.php for in situ PHPUnit testing under WordPress Multisite https://github.com/bobbingwide/oik-batch/issues/9
 * Added: oik_batch_merge_argv in libs/oik-cli.php to reapply args hidden from PHPUnit

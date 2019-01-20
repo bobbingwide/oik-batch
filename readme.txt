@@ -32,7 +32,7 @@ oik-wp
 * Connects to your chosen local WordPress environment.
 * Supports direct invocation of batch processes.
 * Supports running PHPUnit tests for WordPress plugins or themes in situ.
-* Supports installations with Git based plugins
+* Supports installations with Git based plugins and themes
 
 
 oik-batch
@@ -154,7 +154,7 @@ php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--v
 
 == Upgrade Notice ==
 = 1.0.0 =
-Upgrade to support maintenance of Git based plugins from the WordPress dashboard.
+Upgrade to support maintenance of Git based plugins and themes from the WordPress dashboard.
 
 = 0.9.3 =
 Required for in situ PHPUnit tests running under WordPress Multisite 
@@ -215,7 +215,7 @@ Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
 = 1.0.0 =
-* Added: oik batch admin page for Git plugins, [github bobbingwide oik-batch issue 34]
+* Added: oik batch admin page for Git plugins and themes, [github bobbingwide oik-batch issue 34]
 * Added: Add oik-uploads.php to copy upload files [github bobbingwide oik-batch issue 28]
 * Fixed: Don't call oik_batch_trace [github bobbingwide oik-batch issue 26]
 * Fixed: Cater for multisite upload directories [github bobbingwide oik-batch issue 9]

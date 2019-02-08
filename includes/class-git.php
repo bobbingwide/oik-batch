@@ -256,7 +256,7 @@ class Git {
 	 * @return array of results
 	 */
 	public function result_as_array() {
-		$result_array = explode( "\n", $this->result );
+		$result_array = explode( " ", $this->result );
 		//print_r( $this->result );
 		//print_r( $result_array );
 		return( $result_array );

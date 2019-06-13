@@ -73,6 +73,29 @@ function oik_batch_start_wordpress() {
 	global $wpdb, $current_site;
 	require( $abspath . "wp-config.php" );
 	oik_batch_report_wordpress_version();
+	oik_batch_maybe_set_scheme_from_siteurl();
+}
+
+/**
+ *  It's a maybe since the scheme may already have been set for WPMS.
+ */
+
+function oik_batch_maybe_set_scheme_from_siteurl() {
+	if ( defined( 'WP_SITEURL')) {
+		$domain = WP_SITEURL;
+	} else {
+		$domain = get_option( "siteurl" );
+	}
+	oik_batch_set_scheme( $domain );
+}
+
+function oik_batch_set_scheme( $domain ) {
+	if ( !isset( $_SERVER['HTTPS'])) {
+		$scheme = parse_url( $domain, PHP_URL_SCHEME );
+		if ( 'https' === strtolower( $scheme ) ) {
+			$_SERVER['HTTPS'] = 'on';
+		}
+	}
 }
 
 /**

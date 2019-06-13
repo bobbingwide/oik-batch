@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="13" assertions="18" errors="0" failures="0" skipped="0" time="0.417620">
-    <testsuite name="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.033800">
-      <testcase name="test_replace_antispambot" class="Tests_replace_antispambot" classname="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" line="15" assertions="2" time="0.033800"/>
+  <testsuite name="" tests="14" assertions="19" errors="0" failures="0" skipped="0" time="0.494930">
+    <testsuite name="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.147487">
+      <testcase name="test_replace_antispambot" class="Tests_replace_antispambot" classname="Tests_replace_antispambot" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-antispambot.php" line="15" assertions="2" time="0.147487"/>
     </testsuite>
-    <testsuite name="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" tests="5" assertions="9" errors="0" failures="0" skipped="0" time="0.277914">
-      <testcase name="test_git" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="14" assertions="1" time="0.003207"/>
-      <testcase name="test_php_sapi_constant_matches_name" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="19" assertions="1" time="0.000907"/>
-      <testcase name="test_php_sapi_doesnt_change" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="32" assertions="4" time="0.143352"/>
-      <testcase name="test_command" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="44" assertions="2" time="0.124430"/>
-      <testcase name="test_cant_change_php_sapi_constant" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="62" assertions="1" time="0.006018"/>
+    <testsuite name="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" tests="5" assertions="9" errors="0" failures="0" skipped="0" time="0.165710">
+      <testcase name="test_git" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="14" assertions="1" time="0.005316"/>
+      <testcase name="test_php_sapi_constant_matches_name" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="19" assertions="1" time="0.000538"/>
+      <testcase name="test_php_sapi_doesnt_change" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="32" assertions="4" time="0.082880"/>
+      <testcase name="test_command" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="44" assertions="2" time="0.074285"/>
+      <testcase name="test_cant_change_php_sapi_constant" class="test_class_git" classname="test_class_git" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-class-git.php" line="62" assertions="1" time="0.002691"/>
     </testsuite>
-    <testsuite name="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.001747">
-      <testcase name="test_oik_hexdump_php_eol" class="test_class_libs_hexdump" classname="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" line="17" assertions="1" time="0.000892"/>
-      <testcase name="test_oik_hexdump" class="test_class_libs_hexdump" classname="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" line="24" assertions="1" time="0.000855"/>
+    <testsuite name="test_home_url_site_url" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-home-url-site-url.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.002851">
+      <testcase name="test_home_url_equals_site_url" class="test_home_url_site_url" classname="test_home_url_site_url" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-home-url-site-url.php" line="23" assertions="1" time="0.002851"/>
     </testsuite>
-    <testsuite name="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.018474">
-      <testcase name="test_loading_oik_batch" class="Tests_oik_wp_batch_share_libraries" classname="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" line="19" assertions="1" time="0.018474"/>
+    <testsuite name="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.001067">
+      <testcase name="test_oik_hexdump_php_eol" class="test_class_libs_hexdump" classname="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" line="17" assertions="1" time="0.000593"/>
+      <testcase name="test_oik_hexdump" class="test_class_libs_hexdump" classname="test_class_libs_hexdump" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-libs-hexdump.php" line="24" assertions="1" time="0.000474"/>
     </testsuite>
-    <testsuite name="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.000170">
-      <testcase name="test_case" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="9" assertions="1" time="0.000093"/>
-      <testcase name="test_oik_path_available" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="14" assertions="1" time="0.000077"/>
+    <testsuite name="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.016274">
+      <testcase name="test_loading_oik_batch" class="Tests_oik_wp_batch_share_libraries" classname="Tests_oik_wp_batch_share_libraries" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-oik-wp-batch-share-libraries.php" line="19" assertions="1" time="0.016274"/>
     </testsuite>
-    <testsuite name="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.085515">
-      <testcase name="test_get_post_meta_function_exists" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="20" assertions="1" time="0.000099"/>
-      <testcase name="test_factory_methods_available" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="30" assertions="1" time="0.085416"/>
+    <testsuite name="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.000063">
+      <testcase name="test_case" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="9" assertions="1" time="0.000036"/>
+      <testcase name="test_oik_path_available" class="UnitTest" classname="UnitTest" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-phpunit.php" line="14" assertions="1" time="0.000027"/>
+    </testsuite>
+    <testsuite name="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.161478">
+      <testcase name="test_get_post_meta_function_exists" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="20" assertions="1" time="0.000038"/>
+      <testcase name="test_factory_methods_available" class="Tests_WordPress" classname="Tests_WordPress" file="C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\tests\test-wordpress.php" line="30" assertions="1" time="0.161440"/>
     </testsuite>
   </testsuite>
 </testsuites>

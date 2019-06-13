@@ -70,6 +70,7 @@ function oik_batch_start_wordpress() {
 	}
 	oik_batch_set_domain( $abspath );
 	oik_batch_set_path();
+	oik_batch_set_request_method();
 	global $wpdb, $current_site;
 	require( $abspath . "wp-config.php" );
 	oik_batch_report_wordpress_version();

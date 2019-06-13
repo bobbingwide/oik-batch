@@ -217,6 +217,12 @@ function oik_batch_set_path() {
 	}
 }
 
+function oik_batch_set_request_method() {
+	if ( !isset( $_SERVER['REQUEST_METHOD'] )) {
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+	}
+}
+
 /**
  * Obtain a value for a command line parameter
  *

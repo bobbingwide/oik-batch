@@ -6,7 +6,7 @@
  
 class test_class_git extends BW_UnitTestCase {
 
-	function setUp() {
+	function setUp() : void {
 		//$git_loaded = oik_require_lib( "git" );
 		oik_require( "libs/oik-git.php", "oik-batch" );
 	}
@@ -45,7 +45,7 @@ class test_class_git extends BW_UnitTestCase {
 		$git = git();
 		$this->expectOutputString( "git ls-files " . PHP_EOL . PHP_EOL );
 		$result = $git->command( "list" );
-		$this->assertContains( "tests/test-class-git.php", $result );
+		$this->assertStringContainsString( "tests/test-class-git.php", $result );
 		$actual = $this->getActualOutput();
 		bw_trace2( $actual, "actual output", false );
 		//echo $actual;

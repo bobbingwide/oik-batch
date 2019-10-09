@@ -55,18 +55,18 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 	
 	
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		parent::setUpBeforeClass();
 		self::rollback_transaction();
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass() : void {
 		parent::tearDownAfterClass();
 		self::rollback_transaction();
 		self::flush_cache();
 	}
 
-	function setUp() {
+	function setUp() : void {
 		set_time_limit(0);
 
 		if ( ! self::$ignore_files ) {
@@ -113,14 +113,14 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 	 *
 	 * @since 4.2.0
 	 */
-	protected function assertPostConditions() {
+	protected function assertPostConditions() : void {
 		$this->expectedDeprecated();
 	}
 
 	/**
 	 * After a test method runs, reset any state in WordPress the test method might have changed.
 	 */
-	function tearDown() {
+	function tearDown() : void {
 		global $wpdb, $wp_query, $wp;
 		$wpdb->query( 'ROLLBACK;');
 		if ( is_multisite() ) {

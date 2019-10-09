@@ -10,7 +10,7 @@
 
 class test_class_libs_hexdump extends BW_UnitTestCase {
 
-	function setUp() {
+	function setUp() : void {
 		oik_require( "libs/hexdump.php", "oik-batch" );
 	}
 

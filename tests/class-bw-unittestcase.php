@@ -23,7 +23,7 @@
 
 class BW_UnitTestCase extends WP_UnitTestCase {
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		bw_trace2();
 		self::rollback_transaction();
 		// It's not the setUpBeforeClass that needs to do this but the setUp(), which does
@@ -31,7 +31,7 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		//self::set_autocommit_0();
 	}
 	
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass() : void {
 		bw_trace2();
 		self::rollback_transaction();
 	} 

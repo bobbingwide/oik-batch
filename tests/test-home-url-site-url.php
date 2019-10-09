@@ -8,7 +8,7 @@
 
 class test_home_url_site_url extends BW_UnitTestCase {
 
-	function setUp() {
+	function setUp() : void {
 
 	}
 

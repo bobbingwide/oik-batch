@@ -5,11 +5,11 @@
 class Tests_WordPress extends WP_UnitTestCase {
 
 
-	function setUp() {
+	function setUp() : void {
 		// parent::setUp();
 	}
 
-	function tearDown() {
+	function tearDown() : void {
 		// parent::tearDown();
 	}
 	

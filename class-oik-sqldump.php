@@ -77,7 +77,9 @@ class OIK_sqldump {
 	}
 	
 	function get_target_dir() {
+		//if ( is_dir( ))
 		$this->target_dir = "C:/backups-qw/qw/sqldumps/";
+
 		return( $this->target_dir );
 	}
 	

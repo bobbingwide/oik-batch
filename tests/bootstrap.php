@@ -275,7 +275,7 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		 * Compatibility with PHPUnit 6+
 		*/
 		if ( class_exists( 'PHPUnit\Runner\Version' ) ) {
-			require_once $wordpress_develop_dir . '/includes/phpunit6-compat.php';
+			require_once $wordpress_develop_dir . '/includes/phpunit6/compat.php';
 		}
 	
 
@@ -294,11 +294,13 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		oik_require( "tests/testcase.php", "oik-batch" );
 		oik_require( "tests/class-bw-unittestcase.php", "oik-batch" );
 		require $wordpress_develop_dir . '/includes/testcase-rest-api.php';
-		require $wordpress_develop_dir . '/includes/testcase-rest-controller.php';
-		require $wordpress_develop_dir . '/includes/testcase-rest-post-type-controller.php';
-		require $wordpress_develop_dir . '/includes/testcase-xmlrpc.php';
-		require $wordpress_develop_dir . '/includes/testcase-ajax.php';
-		require $wordpress_develop_dir . '/includes/testcase-canonical.php';
+
+		// Issue #7 - try not loading these files rather than having to change them for PHPUnit 8
+		//require $wordpress_develop_dir . '/includes/testcase-rest-controller.php';
+		//require $wordpress_develop_dir . '/includes/testcase-rest-post-type-controller.php';
+		//require $wordpress_develop_dir . '/includes/testcase-xmlrpc.php';
+		//require $wordpress_develop_dir . '/includes/testcase-ajax.php';
+		//require $wordpress_develop_dir . '/includes/testcase-canonical.php';
 		require $wordpress_develop_dir . '/includes/exceptions.php';
 		require $wordpress_develop_dir . '/includes/utils.php';
 		require $wordpress_develop_dir . '/includes/spy-rest-server.php';

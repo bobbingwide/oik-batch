@@ -3,9 +3,9 @@
 Plugin Name: oik-batch
 Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-batch
 Description: Batch interface to WordPress - no need to activate
-Version: 1.0.0
+Version: 1.1.0
 Author: bobbingwide
-Author URI: https://www.oik-plugins.com/author/bobbingwide
+Author URI: https://www.bobbingwide.com/about-bobbing-wide
 License: GPL2
 
     Copyright 2013 - 2019 Bobbing Wide (email : herb@bobbingwide.com )

@@ -2,10 +2,10 @@
 /*
 Plugin Name: oik-wp
 Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-batch
-Description: standalone processing using a complete WordPress installation but not using WP-CLI 
-Version: 1.0.0
+Description: Standalone processing using a complete WordPress installation but not using WP-CLI
+Version: 1.1.0
 Author: bobbingwide
-Author URI: https://www.oik-plugins.com/author/bobbingwide
+Author URI: https://www.bobbingwide.com/about-bobbing-wide
 Text Domain: oik-wp
 Domain Path: /languages/
 License: GPLv2 or later

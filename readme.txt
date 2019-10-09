@@ -2,9 +2,9 @@
 Contributors: bobbingwide,vsgloik
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: batch, WordPress, CLI, PHPUnit
-Requires at least: 4.9.8
-Tested up to: 5.0.3
-Stable tag: 1.0.0
+Requires at least: 5.2
+Tested up to: 5.2.3
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: oik-batch
@@ -136,14 +136,14 @@ batch listapis2 <i>plugin</i>
 
 Alternatively oik-batch.php can be included in the main routine. 
 `
-php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plugin=%1 --site=http://oik-plugins.co.uk --apikey=apikey
+php c:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\createapi2.php --plugin=%1 --site=https://oik-plugins.co.uk --apikey=apikey
 `
 
 wu.bat for invoking oik-phpunit.php
 
 `
 set PRE_PHPUNIT_CD=%CD%
-set PHPUNIT=c:\apache\htdocs\phpLibraries\phpunit\phpunit-6.2.0.phar
+set PHPUNIT=c:\apache\htdocs\phpLibraries\phpunit\phpunit-8.4.1.phar
 php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--verbose" "--disallow-test-output" "--stop-on-error" "--stop-on-failure" "--log-junit=phpunit.json" %*
 
 `
@@ -153,6 +153,9 @@ php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--v
 1. oik-batch in action performing createapi2.php
 
 == Upgrade Notice ==
+= 1.1.0 =
+Upgrade to support in situ PHPUnit testing using PHPUnit 8. Requires wordpress-develop-tests v5.2.3
+
 = 1.0.0 =
 Upgrade to support maintenance of Git based plugins and themes from the WordPress dashboard.
 
@@ -214,6 +217,17 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 1.1.0 = 
+* Changed: Now requires PHPUnit 8 for running in situ PHPUnit tests,[github bobbingwide oik-batch issues 38]
+* Comment: Do we need to test that the target directory exists for sqldumps?,[github bobbingwide oik-batch issues 14]
+* Fixed: Undefined index REQUEST_METHOD when running oik-batch,[github bobbingwide oik-batch issues 21]
+* Fixed: Set $_SERVER['HTTPS'] on when required in batch processing,[github bobbingwide oik-batch issues 37]
+* Fixes: In result_as_array split on spaces rather than new lines,[github bobbingwide oik-batch issues 36]
+* Tested: With PHPUnit 8
+* Tested: With PHP 7.3
+* Tested: With WordPress 5.2.3 and WordPress Multi Site
+* Tested: With WordPress 5.3-beta2
+
 = 1.0.0 =
 * Added: oik batch admin page for Git plugins and themes, [github bobbingwide oik-batch issue 34]
 * Added: Add oik-uploads.php to copy upload files [github bobbingwide oik-batch issue 28]

@@ -8,7 +8,7 @@
 	>
 	<!-- for PHPUnit 5.7, 6.1, 6.2, 6.5 -->
 	<testsuites>
-		<testsuite>
+		<testsuite name="required for PHPUnit 8">
 			<directory prefix="test-" suffix=".php">tests/</directory>
 		</testsuite>
 	</testsuites>

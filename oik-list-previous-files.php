@@ -375,6 +375,8 @@ function oikb_list_changed_files( $prev_version, $plugin, $component_type, $oiks
 		//		$oiksc_parse_status->set_of_n( $of_n );
 		//}
 	}
+	//print_r( $files );
+	bw_trace2( $files, "Files", true, BW_TRACE_DEBUG );
 	return( $files );
 
 }

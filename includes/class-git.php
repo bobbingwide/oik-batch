@@ -46,6 +46,11 @@ class Git {
 	private static $instance;
 
 	/**
+	 * $stderr
+	 */
+	public $stderr = null;
+
+	/**
 	 * Return a single instance of this class
 	 *
 	 * @return object 
@@ -201,7 +206,8 @@ class Git {
 		$cmd = $this->actual_command( $command, $parms );
 		$prevdir = $this->chdir( $this->source_dir );
 		//echo "Is source_dir correctly set: {$this->source_dir}?" . PHP_EOL;
-		$this->execute( $cmd );
+		//$this->execute( $cmd );
+		$this->execute_with_proc_open( $cmd );
 		
 		//echo "Result: " . $this->result . PHP_EOL;
 		$this->reset_dir( $prevdir );
@@ -212,7 +218,7 @@ class Git {
 	}
 	
 	/**
-	 * Return the actual git command to use
+	 * Returns the actual git command to use
 	 *
 	 * No longer defaulting to "status -s" but the command passed
 	 *
@@ -227,7 +233,7 @@ class Git {
 	}
 	
 	/**
-	 * Execute a command
+	 * Executes a command.
 	 *
 	 * Perform the git command and store the result of the command in this->result
 	 * The result can then be interpreted by the calling routine
@@ -240,14 +246,54 @@ class Git {
 	 */
 	public function execute( $cmd ) {
 		$this->echo( $cmd . PHP_EOL );
-		$result = shell_exec( "$cmd 2>&1" );
+		// It appears we can't capture the stderr output using ob_start?
+		// and using exec() do
+		ob_start();
+		$result = shell_exec( "$cmd" ); //  2>&1" );
+		$stderr = ob_get_clean();
+		//echo "2:";
+		//print_r( $stderr );
+		//echo ":2";
 		bw_trace2( $result, "Result:");
 		bw_trace2( $this->hexdump( $result), "Hexdump:" );
-		$result = str_replace( ["\t", "\n", "\r" ], " ", $result );
+		$result = str_replace( ["\t", "\r" ], " ", $result );
 		$this->result = trim( $result );
 
 		//echo "execute result:" . $result . ":" . PHP_EOL;
 		return( $this->result );
+	}
+
+	/**
+	 * Executes a command using proc_open to capture stderr separately from stdout.
+	 *
+	 * @param string $cmd
+	 * @return string|null
+	 */
+
+	public function execute_with_proc_open( $cmd ) {
+		$this->echo( $cmd . PHP_EOL );
+		$descriptor_spec = [ 0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w'] ];
+		$process = proc_open( $cmd, $descriptor_spec, $pipes );
+
+		//echo PHP_EOL;
+		//echo $process;
+		//echo PHP_EOL;
+		$result = stream_get_contents( $pipes[ 1 ] );
+		fclose( $pipes[ 1 ] );
+		//print_r( $result );
+		$stderr = stream_get_contents( $pipes[ 2 ] );
+		fclose( $pipes[ 2 ] );
+		//echo "Stderr:";
+		//print_r( $stderr );
+		$return_code = proc_close( $process );
+		bw_trace2( $return_code, "return code", false, BW_TRACE_DEBUG );
+		bw_trace2( $result, "Result:", false, BW_TRACE_DEBUG );
+		bw_trace2( $this->hexdump( $result), "Hexdump:", false, BW_TRACE_VERBOSE );
+		bw_trace2( $stderr, "Stderr:", false, BW_TRACE_DEBUG );
+		$result = str_replace( ["\t", "\r" ], " ", $result );
+		$this->result = trim( $result );
+		$this->stderr = trim( $stderr );
+		return $this->result;
 	}
 	
 	/**
@@ -256,7 +302,9 @@ class Git {
 	 * @return array of results
 	 */
 	public function result_as_array() {
-		$result_array = explode( " ", $this->result );
+		//print_r( $this->result );
+		//gob();
+		$result_array = explode( "\n", $this->result );
 		//print_r( $this->result );
 		//print_r( $result_array );
 		return( $result_array );

@@ -206,9 +206,12 @@ class Git {
 		$cmd = $this->actual_command( $command, $parms );
 		$prevdir = $this->chdir( $this->source_dir );
 		//echo "Is source_dir correctly set: {$this->source_dir}?" . PHP_EOL;
-		//$this->execute( $cmd );
-		$this->execute_with_proc_open( $cmd );
-		
+		$this->echo( $cmd . PHP_EOL );
+		if ( $cmd === 'git add .') {
+			$this->execute( $cmd );
+		} else {
+			$this->execute_with_proc_open( $cmd );
+		}
 		//echo "Result: " . $this->result . PHP_EOL;
 		$this->reset_dir( $prevdir );
 		$this->command = $command;
@@ -229,6 +232,7 @@ class Git {
 		}
 		$actual = bw_array_get( $this->commands, $command, $command );
 		$cmd = "git $actual $parms";
+		$cmd = trim( $cmd );
 		return( $cmd );
 	}
 	
@@ -279,12 +283,15 @@ class Git {
 		//echo $process;
 		//echo PHP_EOL;
 		$result = stream_get_contents( $pipes[ 1 ] );
+		echo $result;
 		fclose( $pipes[ 1 ] );
-		//print_r( $result );
+		echo "Result:";
+		print_r( $result );
 		$stderr = stream_get_contents( $pipes[ 2 ] );
+		//echo $stderr;
 		fclose( $pipes[ 2 ] );
-		//echo "Stderr:";
-		//print_r( $stderr );
+		echo "Stderr:";
+		print_r( $stderr );
 		$return_code = proc_close( $process );
 		bw_trace2( $return_code, "return code", false, BW_TRACE_DEBUG );
 		bw_trace2( $result, "Result:", false, BW_TRACE_DEBUG );

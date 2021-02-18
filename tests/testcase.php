@@ -8,8 +8,9 @@
  * Includes utility functions and assertions useful for testing WordPress.
  *
  * All WordPress unit tests should inherit from this class.
+ * PHPUnit\Framework\TestCase
  */
-class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
+class WP_UnitTestCase extends PHPUnit\Framework\TestCase {
 
 	protected static $forced_tickets = array();
 	protected $expected_deprecated = array();
@@ -307,6 +308,18 @@ class WP_UnitTestCase extends PHPUnit_Framework_TestCase {
 		}
 
 		throw new WPDieException( $message );
+	}
+
+	/**
+	 * getAnnotations was deprecated in PHPUnit 9.5.2
+	 * so we need to call something else
+	 */
+	function getAnnotations(): array
+	{
+		return PHPUnit\Util\Test::parseTestMethodAnnotations(
+			static::class,
+			$this->name
+		);
 	}
 
 	function expectDeprecated() {

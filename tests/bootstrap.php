@@ -273,9 +273,10 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 	
 		/**
 		 * Compatibility with PHPUnit 6+
+		 * Issue #9 - do we still need this?
 		*/
 		if ( class_exists( 'PHPUnit\Runner\Version' ) ) {
-			require_once $wordpress_develop_dir . '/includes/phpunit6/compat.php';
+			//require_once $wordpress_develop_dir . '/includes/phpunit6/compat.php';
 		}
 	
 
@@ -301,7 +302,8 @@ function load_bootstrap_functions( $wordpress_develop_dir ) {
 		//require $wordpress_develop_dir . '/includes/testcase-xmlrpc.php';
 		//require $wordpress_develop_dir . '/includes/testcase-ajax.php';
 		//require $wordpress_develop_dir . '/includes/testcase-canonical.php';
-		require $wordpress_develop_dir . '/includes/exceptions.php';
+		// Issue #9 - try not loading these files for PHPUnit 8
+		//require $wordpress_develop_dir . '/includes/exceptions.php';
 		require $wordpress_develop_dir . '/includes/utils.php';
 		require $wordpress_develop_dir . '/includes/spy-rest-server.php';
 		

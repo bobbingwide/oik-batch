@@ -31,6 +31,20 @@ class test_class_libs_hexdump extends BW_UnitTestCase {
 		$this->assertEquals( $expected, $output );
 	}
 
+	/**
+	 * What should oik_hexdump do when passed an integer such as __LINE__ ?
+	 */
+
+	function test_oik_hexdump_line() {
+		$string = __LINE__;
+		echo $string;
+		$output = oik_hexdump( $string );
+		echo $output;
+		$expected = '35' . PHP_EOL;
+		$this->assertEquals( $expected, $output );
+
+	}
+
 
 
 }

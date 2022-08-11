@@ -514,7 +514,7 @@ function oik_batch_trace( $trace_on=false ) {
  */
 function oik_batch_admin_menu() {
 	
-  oik_register_plugin_server( __FILE__ );
+  oik_register_plugin_server( oik_path( 'oik-batch.php', 'oik-batch') );
   //add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
 	//add_action( "oik_menu_box", "oik_batch_oik_menu_box" );
 	//add_action( "admin_menu", "oik_batch_admin_menu" );

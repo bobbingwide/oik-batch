@@ -20,6 +20,7 @@ class WP_UnitTestCase extends PHPUnit\Framework\TestCase {
 
 	protected static $hooks_saved = array();
 	protected static $ignore_files;
+	protected $restore_hooks = true;
 
 	function __isset( $name ) {
 		return 'factory' === $name;
@@ -142,7 +143,7 @@ class WP_UnitTestCase extends PHPUnit\Framework\TestCase {
 		remove_filter( 'query', array( $this, '_create_temporary_tables' ) );
 		remove_filter( 'query', array( $this, '_drop_temporary_tables' ) );
 		remove_filter( 'wp_die_handler', array( $this, 'get_wp_die_handler' ) );
-		$this->_restore_hooks();
+		$this->maybe_restore_hooks();
 		wp_set_current_user( 0 );
 	}
 
@@ -777,5 +778,15 @@ class WP_UnitTestCase extends PHPUnit\Framework\TestCase {
 		$id = wp_insert_attachment( $attachment, $upload[ 'file' ], $parent_post_id );
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
 		return $id;
+	}
+
+	function dont_restore_hooks() {
+		$this->restore_hooks = false;
+	}
+
+	function maybe_restore_hooks() {
+		if ( $this->restore_hooks ) {
+			$this->_restore_hooks();
+		}
 	}
 }

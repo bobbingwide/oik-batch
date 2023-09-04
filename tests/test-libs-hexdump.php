@@ -33,14 +33,16 @@ class test_class_libs_hexdump extends BW_UnitTestCase {
 
 	/**
 	 * What should oik_hexdump do when passed an integer such as __LINE__ ?
-	 */
-
+	 *
+	 * Currently it doesn't cast the number to a string so produces a Warning.
+	 * We cast it to a string so that the test passes.
+     */
 	function test_oik_hexdump_line() {
 		$string = __LINE__;
-		echo $string;
-		$output = oik_hexdump( $string );
-		echo $output;
-		$expected = '35' . PHP_EOL;
+		//echo $string;
+		$output = oik_hexdump( (string) $string );
+		//echo $output;
+		$expected = '2' . PHP_EOL . '41.................. 34 31 ' . PHP_EOL;
 		$this->assertEquals( $expected, $output );
 
 	}

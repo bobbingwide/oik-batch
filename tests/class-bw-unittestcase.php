@@ -15,7 +15,7 @@
  * delivered by oik-batch.
  * 
  * Any test that might cause a database change and that which implements the setUp() method
- * must also call call parent::setUp() to ensure that the transactions are rolled back at the end.
+ * must also call parent::setUp() to ensure that the transactions are rolled back at the end.
  * 
  * 
  * {@see https://dev.mysql.com/doc/refman/5.7/en/commit.html}
@@ -45,12 +45,15 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Commits the transaction
 	 * 
-	 * We don't expect any calls to this method so we trace it and then go bang.
-	 * @TODO One day this will be implemented properly.
+     * For those rare occasions where we need to commit some changes in order to be able to test something else.
+     * This is required if we're going to do a wp_remote_get() to fetch something we've created within the test.
+     *
+     * In this case we should run cleanup routines before and after each test.
 	 */
 	public static function commit_transaction() {
-		bw_trace2();
-		gob();
+		global $wpdb;
+		$wpdb->query( 'COMMIT' );
+		bw_trace2( $wpdb, "wpdb" );
 	}
 	
 	public static function set_autocommit_0() {
@@ -353,6 +356,8 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		if ( $locale === 'bb_BB' ) {
 			$bw = translate( "bobbingwide", "oik" );
 			$this->assertEquals( "bboibgniwde", $bw );
+			$bw = translate( "bobbingwide", null );
+			$this->assertEquals( "bboibgniwde", $bw );
 		}	
 			
 	}
@@ -419,6 +424,8 @@ class BW_UnitTestCase extends WP_UnitTestCase {
 		$expected = str_replace( $prefix . $post->ID, $prefix . "42", $expected );
 		return $expected;
 	}
+
+
 	
 
 }

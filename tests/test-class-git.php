@@ -43,12 +43,33 @@ class test_class_git extends BW_UnitTestCase {
 	 */ 
 	function test_command() {
 		$git = git();
-		$this->expectOutputString( "git ls-files " . PHP_EOL . PHP_EOL );
-		$result = $git->command( "list" );
-		$this->assertStringContainsString( "tests/test-class-git.php", $result );
+		$remote_output = '';
+		$remote_output .= 'git remote -v';
+		$remote_output .= "\r\n";
+		$remote_output .= "\r\n";
+		$remote_output .= 'git remote -v';
+		$remote_output .= "\r\n";
+		$remote_output .= "\r\n";
+		$remote_output .= 'origin\t\github\bobbingwide\oik-batch (fetch)';
+		$remote_output .= "\n";
+		$remote_output .= 'origin\t\github\bobbingwide\oik-batch (push)';
+		$remote_output .= "\n";
+		$remote_output .= 'Result:origin\t\github\bobbingwide\oik-batch (fetch)';
+		$remote_output .= "\n";
+		$remote_output .= 'origin\t\github\bobbingwide\oik-batch (push)';
+		$remote_output .= "\n";
+		$remote_output .= 'Stderr:';
+
+		$remote_output = str_replace( '\t', "\t", $remote_output );
+
+		$this->expectOutputString( $remote_output );
+		$result = $git->command( "remote -v" );
+
 		$actual = $this->getActualOutput();
 		bw_trace2( $actual, "actual output", false );
+		$actual = str_replace( "\t", " ", $actual );
 		//echo $actual;
+		$this->assertStringContainsString( "origin \github\bobbingwide\oik-batch (fetch)", $result );
 	}
 	
 	/**

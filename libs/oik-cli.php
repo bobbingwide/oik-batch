@@ -1,6 +1,6 @@
-<?php // (C) Copyright Bobbing Wide 2015-2019
+<?php // (C) Copyright Bobbing Wide 2015-2023
 if ( !defined( "OIK_CLI_INCLUDED" ) ) {
-	define( "OIK_CLI_INCLUDED", "1.0.1" );
+	define( "OIK_CLI_INCLUDED", "1.1.1" );
 
 /**
  * Command Line Interface (CLI) functions

@@ -172,7 +172,7 @@ class Git {
 	 * @return string previous directory for reset
 	 */
 	public function chdir( $source_dir ) {
-		$changed = is_dir( $source_dir );
+		$changed = ( null !== $source_dir ) && is_dir( $source_dir );
 		if ( $changed ) {
 			$this->cwd = getcwd();
 			$changed = chdir( $source_dir );
@@ -260,8 +260,11 @@ class Git {
 		//echo ":2";
 		bw_trace2( $result, "Result:");
 		bw_trace2( $this->hexdump( $result), "Hexdump:" );
-		$result = str_replace( ["\t", "\r" ], " ", $result );
-		$this->result = trim( $result );
+		$this->result = null;
+		if ( null !== $result ) {
+			$result      =str_replace( [ "\t", "\r" ], " ", $result );
+			$this->result=trim( $result );
+		}
 
 		//echo "execute result:" . $result . ":" . PHP_EOL;
 		return( $this->result );

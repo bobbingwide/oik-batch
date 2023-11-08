@@ -40,7 +40,7 @@ class _la_RFI extends RecursiveFilterIterator {
 function strip_directory_path( $directory_path, $filename ) {
   $directory_path = str_replace( "\\", "/", $directory_path ); 
   $filename = str_replace( "\\", "/", $filename );
-  $filename = str_replace( $directory_path, null, $filename );
+  $filename = str_replace( $directory_path, '', $filename );
   return( $filename );  
 }  
 

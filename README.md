@@ -4,8 +4,8 @@
 * Donate link: https://www.oik-plugins.com/oik/oik-donate/
 * Tags: batch, WordPress, CLI, PHPUnit
 * Requires at least: 5.2
-* Tested up to: 6.3.1
-* Stable tag: 1.1.1
+* Tested up to: 6.4.1
+* Stable tag: 1.1.2
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: oik-batch
@@ -154,24 +154,14 @@ php C:\apache\htdocs\wordpress\wp-content\plugins\oik-batch\oik-phpunit.php "--v
 1. oik-batch in action performing createapi2.php
 
 ## Upgrade Notice 
-# 1.1.1 
-Upgrade to support PHPUnit testing of plugins using ACF Pro.
+# 1.1.2 
+Update for support for PHP 8.1 and PHP 8.2.
 
 ## Changelog 
-# 1.1.1 
-* Added: Add dont_restore_hooks() method to support testing of ACF Pro #44
-* Changed: Change test git command from ls to remote -v for expectOutputString to pass #44
-* Fixed: Fix PHPUnit Fatal Error Class PHPUnit_Framework_TestCase not found #43
-* Changed: Enable ability to commit the transaction #44
-* Fixed: Correct parameters to oik_register_plugin_server. See diy-oik issues 6
-* Changed: Update oik-blocks.php shared library
-* Changed: Support PHPUnit 9.5.2 #42
-* Added: Add test_oik_hexdump_line()
-* Fixed: Avoid deprecated messages from PHP 8
-* Fixed: Revert to using execute() when performing 'git add .' to avoid hang #40
-* Fixed: Handle spaces in directories #39
-* Fixed: trap stderr separately from stdout #40
-* Changed: Update shared library files
-* Tested: With PHPUnit 9
-* Tested: With PHP 8.0
-* Tested: With WordPress 6.3.1 and WordPress Multi Site
+# 1.1.2 
+* Changed: Don't str_replace( $string, null, $to ) #45
+* Changed: PHP 8.2: Don't strlen( null ) #45
+* Changed: PHP 8.2: Don't is_dir( null ) #45
+* Tested: With PHPUnit 9.6
+* Tested: With PHP 8.0, PHP 8.1 and PHP 8.2
+* Tested: With WordPress 6.4.1 and WordPress Multisite

@@ -1,4 +1,7 @@
 == Upgrade Notice ==
+= 1.1.1 = 
+Upgrade to support PHPUnit testing of plugins using ACF Pro.
+
 = 1.1.0 =
 Upgrade to support in situ PHPUnit testing using PHPUnit 8. Requires wordpress-develop-tests v5.2.3
 
@@ -63,6 +66,24 @@ You will need to upgrade oik-shortcodes to v1.11 or higher
 Required for defining oik APIs for oik plugins. Only supports non-OO functions.
 
 == Changelog ==
+= 1.1.1 = 
+* Added: Add dont_restore_hooks() method to support testing of ACF Pro #44 
+* Changed: Change test git command from ls to remote -v for expectOutputString to pass #44
+* Fixed: Fix PHPUnit Fatal Error Class PHPUnit_Framework_TestCase not found #43
+* Changed: Enable ability to commit the transaction #44
+* Fixed: Correct parameters to oik_register_plugin_server. See diy-oik issues 6
+* Changed: Update oik-blocks.php shared library
+* Changed: Support PHPUnit 9.5.2 #42
+* Added: Add test_oik_hexdump_line()
+* Fixed: Avoid deprecated messages from PHP 8
+* Fixed: Revert to using execute() when performing 'git add .' to avoid hang #40
+* Fixed: Handle spaces in directories #39
+* Fixed: trap stderr separately from stdout #40
+* Changed: Update shared library files
+* Tested: With PHPUnit 9
+* Tested: With PHP 8.0
+* Tested: With WordPress 6.3.1 and WordPress Multi Site
+
 = 1.1.0 = 
 * Changed: Now requires PHPUnit 8 for running in situ PHPUnit tests,[github bobbingwide oik-batch issues 38]
 * Comment: Do we need to test that the target directory exists for sqldumps?,[github bobbingwide oik-batch issues 14]

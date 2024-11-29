@@ -223,7 +223,7 @@ function oik_wp_print_key_value( $key, $value ) {
 	span( "value");
 	e( $value );
 	epan();
-	ep();
+	bw_echo( '</p>' );
 }
 
 function oik_wp_report_plugins( $plugins ) {

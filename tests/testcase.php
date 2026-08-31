@@ -317,10 +317,13 @@ class WP_UnitTestCase extends PHPUnit\Framework\TestCase {
 	 */
 	function getAnnotations(): array
 	{
+		/*
 		return PHPUnit\Util\Test::parseTestMethodAnnotations(
 			static::class,
 			$this->name
 		);
+		*/
+		return [];
 	}
 
 	function expectDeprecated() {

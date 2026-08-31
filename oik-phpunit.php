@@ -56,7 +56,9 @@ function oik_phpunit_save_our_args() {
 }	
 
 /**
- * Determine the name of the PHPUNIT phar file to load
+ * Runs the required version of PHPUnit.
+ *
+ * Determine the name of the PHPUNIT phar file to load.
  * 
  * The calling routine is expected to set this in the environment. e.g.
  * `
@@ -72,7 +74,22 @@ function oik_phpunit_run_phpunit() {
 	echo $phpunit;
 	echo PHP_EOL;
 	include $phpunit;
-	PHPUnit\TextUI\Command::main();
+	/**
+	 * How we invoke the PHPUnit code depends on the level of PHPUnit being run.
+	 */
+	if ( str_contains( $phpunit, 'unit-9.' )) {
+		PHPUnit\TextUI\Command::main();
+	}
+	if ( str_contains( $phpunit, 'unit-10.' ) ) {
+		$application = new PHPUnit\TextUI\Application;
+		print_r( $_SERVER['argv']);
+		$application->run( $_SERVER['argv'] );
+	}
+	if ( str_contains( $phpunit, 'unit-11.') ) {
+		$application=new PHPUnit\TextUI\Application;
+		print_r( $_SERVER['argv'] );
+		$application->run( $_SERVER['argv'] );
+	}
 	echo "I don't think we'll get here" . PHP_EOL;
 	echo "oik-phpunit ended" . PHP_EOL;
 	
